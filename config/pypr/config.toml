@@ -1,0 +1,19 @@
+[pyprland]
+plugins = [
+  "scratchpads",
+  "magnify",
+]
+
+[scratchpads.term]
+animation = "fromTop"
+command = "kitty --class kitty-dropterm"
+class = "kitty-dropterm"
+size = "75% 60%"
+
+# Dropdown system monitor — btop (smaller font so all boxes incl. GPU fit)
+[scratchpads.sysmon]
+animation = "fromTop"
+command = "kitty --class kitty-sysmon -o font_size=12 -e btop"
+class = "kitty-sysmon"
+size = "70% 65%"
+lazy = true

@@ -1,0 +1,61 @@
+[mgr]
+cwd = { fg = "BrightMagenta", bold = true }
+
+hovered         = { fg = "Black", bg = "BrightBlue", bold = true }
+preview_hovered = { underline = true }
+
+find_keyword  = { fg = "BrightYellow", bold = true, underline = true }
+find_position = { fg = "BrightCyan",   bold = true }
+
+marker_selected = { fg = "BrightGreen",  bg = "BrightGreen" }
+marker_copied   = { fg = "BrightYellow", bg = "BrightYellow" }
+marker_cut      = { fg = "BrightRed",    bg = "BrightRed" }
+
+tab_active   = { fg = "BrightWhite", bold = true }
+tab_inactive = { fg = "BrightBlack" }
+tab_width    = 1
+
+border_symbol = "│"
+border_style  = { fg = "BrightBlack" }
+
+[status]
+separator_open  = ""
+separator_close = ""
+separator_style = { fg = "BrightBlack" }
+
+mode_normal = { fg = "Black", bg = "BrightBlue",  bold = true }
+mode_select = { fg = "Black", bg = "BrightGreen", bold = true }
+mode_unset  = { fg = "Black", bg = "BrightRed",   bold = true }
+
+progress_label  = { bold = true }
+progress_normal = { fg = "BrightBlue" }
+progress_error  = { fg = "BrightRed" }
+
+permissions_t = { fg = "BrightBlue" }
+permissions_r = { fg = "BrightYellow" }
+permissions_w = { fg = "BrightRed" }
+permissions_x = { fg = "BrightGreen" }
+permissions_s = { fg = "BrightMagenta" }
+permissions_c = { fg = "BrightWhite", bold = true }
+permissions_n = { fg = "BrightBlack" }
+
+[filetype]
+rules = [
+  { mime = "image/*",  fg = "BrightYellow" },
+  { mime = "audio/*",  fg = "BrightCyan" },
+  { mime = "video/*",  fg = "BrightMagenta" },
+  { mime = "application/pdf", fg = "BrightRed" },
+
+  # Archives
+  { mime = "application/zip",             fg = "Yellow" },
+  { mime = "application/gzip",            fg = "Yellow" },
+  { mime = "application/x-tar",           fg = "Yellow" },
+  { mime = "application/x-bzip2",         fg = "Yellow" },
+  { mime = "application/x-7z-compressed", fg = "Yellow" },
+  { mime = "application/x-rar",           fg = "Yellow" },
+
+  # Directories
+  { url = "*/", fg = "BrightBlue", bold = true },
+  # Default
+  { url = "*", fg = "White" },
+]

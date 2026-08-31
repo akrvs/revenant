@@ -1,0 +1,27 @@
+theme = "Summer"
+enable_notify = false
+client_port = 8080
+
+border_type = "Thick"
+play_icon = "⏵"
+pause_icon = "⏸"
+liked_icon = "♥"
+explicit_icon = "🅴"
+
+playback_format = """
+{status} {track} {liked}
+- {artists}
+~ {album}
+
+[ {metadata} ]
+"""
+
+[layout]
+library = { album_percent = 0, playlist_percent = 99 }
+playback_window_position = "Bottom"
+playback_window_height = 11
+
+[device]
+name = "Linux"
+audio_cache = false
+normalization = false

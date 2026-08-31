@@ -1,0 +1,13 @@
+[Default Applications]
+x-scheme-handler/notion=notion.desktop
+inode/directory=yazi.desktop
+x-scheme-handler/claude-cli=claude-code-url-handler.desktop
+x-scheme-handler/antigravity=antigravity.desktop
+x-scheme-handler/claude=claude-desktop.desktop
+text/html=firefox.desktop
+x-scheme-handler/http=firefox.desktop
+x-scheme-handler/https=firefox.desktop
+x-scheme-handler/about=firefox.desktop
+x-scheme-handler/unknown=firefox.desktop
+
+[Added Associations]

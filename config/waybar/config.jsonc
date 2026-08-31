@@ -1,0 +1,166 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "margin-top": 6,
+    "margin-left": 12,
+    "margin-right": 12,
+    "spacing": 4,
+
+    "modules-left": ["hyprland/workspaces", "custom/media"],
+    "modules-center": ["clock", "custom/weather"],
+    "modules-right": ["custom/pomo", "hyprland/language", "pulseaudio", "custom/brightness", "network", "bluetooth", "custom/disk", "memory", "cpu", "custom/cputemp", "custom/gpu", "custom/sysload", "custom/hypridle", "custom/notifications"],
+
+    "hyprland/workspaces": {
+        "format": "{id}",
+        "on-click": "activate",
+        "sort-by-number": true,
+        "active-only": false,
+        "on-scroll-up": "hyprctl dispatch workspace e+1",
+        "on-scroll-down": "hyprctl dispatch workspace e-1",
+        "persistent-workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": []
+        }
+    },
+
+    "hyprland/language": {
+        "format": "󰌌 {}",
+        "format-en": "US",
+        "format-gr": "GR"
+    },
+
+    "custom/media": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/media.sh",
+        "on-click": "playerctl --player spotify play-pause",
+        "interval": 2,
+        "escape": true
+    },
+
+    "clock": {
+        "format": "{:%H:%M  •  %a %d %b}",
+        "tooltip": false,
+        "on-click": "~/.config/waybar/scripts/calendar.sh"
+    },
+
+    "bluetooth": {
+        "format": "󰂲",
+        "format-on": "󰂯",
+        "format-connected": "󰂱",
+        "format-connected-battery": "󰂱 {device_battery_percentage}%",
+        "tooltip-format": "Bluetooth: off",
+        "tooltip-format-on": "Bluetooth: on",
+        "tooltip-format-connected": "Connected: {device_alias}",
+        "on-click": "rfkill toggle bluetooth"
+    },
+
+    "network": {
+        "format-wifi": "{icon} {signalStrength}%",
+        "format-ethernet": "󰌘",
+        "format-disconnected": "󰌙",
+        "format-icons": ["󰤯","󰤟","󰤢","󰤥","󰤨"],
+        "tooltip-format-wifi": "{essid}  {signalStrength}%\n↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}",
+        "interval": 5
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰖁 muted",
+        "format-icons": {
+            "default": ["󰕿","󰖀","󰕾"]
+        },
+        "on-click": "~/.config/waybar/scripts/volume.sh",
+        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
+        "tooltip": false
+    },
+
+    "custom/brightness": {
+        "format": "󰃠 {}%",
+        "exec": "ddcutil getvcp 10 | grep -oP 'current value =\\s*\\K\\d+'",
+        "interval": "once",
+        "signal": 8,
+        "on-click": "~/.config/waybar/scripts/brightness.sh",
+        "on-scroll-up": "current=$(ddcutil getvcp 10 | grep -oP 'current value =\\s*\\K\\d+'); ddcutil setvcp 10 $(($current + 5)) --noverify --sleep-multiplier .1; pkill -RTMIN+8 waybar",
+        "on-scroll-down": "current=$(ddcutil getvcp 10 | grep -oP 'current value =\\s*\\K\\d+'); ddcutil setvcp 10 $(($current - 5)) --noverify --sleep-multiplier .1; pkill -RTMIN+8 waybar",
+        "tooltip": false
+    },
+
+    "cpu": {
+        "format": "󰻠 {usage}%",
+        "interval": 2,
+        "tooltip": false
+    },
+
+    "custom/cputemp": {
+        "format": "󰔄 {}",
+        "exec": "~/.config/waybar/scripts/cputemp.sh",
+        "interval": 5,
+        "tooltip": false
+    },
+
+    "custom/gpu": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/gpu.sh",
+        "interval": 3,
+        "on-click": "kitty --class amdgpu-top -o font_size=11 -e amdgpu_top"
+    },
+
+    "custom/sysload": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/sysload.sh",
+        "interval": 5,
+        "on-click": "kitty --title 'System Info' -e btop"
+    },
+
+    "custom/weather": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/weather.sh",
+        "interval": 900,
+        "tooltip": true
+    },
+
+    "custom/notifications": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/notifications.sh",
+        "interval": 2,
+        "on-click": "~/.config/waybar/scripts/notification-center.sh",
+        "tooltip": true
+    },
+
+    "memory": {
+        "format": "󰍛 {percentage}%",
+        "interval": 2,
+        "tooltip-format": "{used:0.1f}G / {total:0.1f}G"
+    },
+
+    "custom/disk": {
+        "format": "{}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/disk_combined.sh",
+        "interval": 30
+    },
+
+    "custom/pomo": {
+        "exec": "~/.config/waybar/scripts/pomo.sh",
+        "interval": 5,
+        "on-click": "~/.config/waybar/scripts/pomo.sh --start",
+        "tooltip": false
+    },
+    "custom/hypridle": {
+        "format": "{}",
+        "return-type": "json",
+        "interval": 1,
+        "exec": "~/.config/hypr/scripts/Hypridle.sh status",
+        "on-click": "~/.config/hypr/scripts/Hypridle.sh toggle"
+    }
+}

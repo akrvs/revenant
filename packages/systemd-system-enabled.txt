@@ -1,0 +1,10 @@
+bluetooth.service
+cpu-powersave.service
+getty@.service
+greetd.service
+NetworkManager-dispatcher.service
+NetworkManager-wait-online.service
+NetworkManager.service
+systemd-timesyncd.service
+fstrim.timer
+logrotate.timer

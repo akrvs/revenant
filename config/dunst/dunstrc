@@ -1,0 +1,122 @@
+# dunst — minimal / hacker notifications
+# Colors live in ~/.config/dunst/dunstrc.d/wallust-colors.conf and are
+# regenerated from the wallpaper by wallust (see ~/.config/wallust/wallust.toml).
+# Values below are static fallbacks so dunst still looks right before the
+# first wallust run. Drop-ins in dunstrc.d/ override anything set here.
+
+[global]
+    monitor = 0
+    follow = none
+
+    # Geometry — sits just under the Waybar top bar
+    width = (0, 360)
+    height = (0, 240)
+    origin = top-right
+    offset = (12, 44)
+    scale = 0
+    notification_limit = 5
+
+    # Progress bar (volume/brightness style notifications)
+    progress_bar = true
+    progress_bar_height = 8
+    progress_bar_frame_width = 0
+    progress_bar_min_width = 150
+    progress_bar_max_width = 420
+    progress_bar_corner_radius = 4
+
+    indicate_hidden = yes
+    transparency = 6
+    separator_height = 1
+    padding = 9
+    horizontal_padding = 12
+    text_icon_padding = 10
+    frame_width = 1
+    frame_color = "#504F5E"
+    separator_color = frame
+    gap_size = 5
+    corner_radius = 6
+    sort = yes
+
+    # Text — minimal / gamified toast
+    font = Iosevka Nerd Font 10
+    line_height = 1
+    markup = full
+    format = "<b>%s</b>  <span alpha='55%%'>%b</span>"
+    alignment = left
+    vertical_alignment = center
+    show_age_threshold = 60
+    ellipsize = end
+    ignore_newline = no
+    stack_duplicates = true
+    hide_duplicate_count = false
+    show_indicators = yes
+
+    # Icons
+    icon_position = off
+    min_icon_size = 16
+    max_icon_size = 36
+    enable_recursive_icon_lookup = true
+    icon_theme = "Adwaita"
+
+    # History / actions (dunst can't grab keys on Wayland — driven from Hyprland)
+    sticky_history = yes
+    history_length = 40
+    dmenu = /usr/bin/rofi -dmenu -p dunst
+    browser = /usr/bin/xdg-open
+    always_run_script = true
+    title = Dunst
+    class = Dunst
+    corner_radius = 8
+    ignore_dbusclose = false
+    force_xwayland = false
+    force_xinerama = false
+
+    # Mouse
+    mouse_left_click = do_action, close_current
+    mouse_middle_click = do_action, close_current
+    mouse_right_click = close_all
+
+[urgency_low]
+    background = "#0F0F12"
+    foreground = "#6D7487"
+    frame_color = "#6D7487"
+    timeout = 6
+    format = "<span foreground='#7a8290'></span>  <b>%s</b>  <span alpha='55%%'>%b</span>"
+
+[urgency_normal]
+    background = "#0F0F12"
+    foreground = "#C0C6DA"
+    frame_color = "#504F5E"
+    timeout = 8
+    format = "<span foreground='#a6e3a1'></span>  <b>%s</b>\n<span alpha='60%%'>%b</span>"
+    script = ~/.config/dunst/scripts/notify-sound.sh
+
+[urgency_critical]
+    background = "#0F0F12"
+    foreground = "#C0C6DA"
+    frame_color = "#fb4934"
+    timeout = 0
+    format = "<span foreground='#fb4934'></span>  <b>%s</b>\n<span alpha='75%%'>%b</span>"
+    script = ~/.config/dunst/scripts/notify-sound.sh
+
+# ── Suppress OSD-style hardware toasts (volume/brightness/mic) ──
+# Waybar already shows volume/brightness; these just clutter notifications.
+[skip_volume_osd]
+    stack_tag = "volume_notif"
+    skip_display = true
+    history_ignore = true
+
+[skip_brightness_osd]
+    stack_tag = "brightness_notif"
+    skip_display = true
+    history_ignore = true
+
+[skip_volume_toggle]
+    summary = "Volume Switched*"
+    skip_display = true
+    history_ignore = true
+
+[skip_mic_toggle]
+    summary = "Microphone Switched*"
+    skip_display = true
+    history_ignore = true

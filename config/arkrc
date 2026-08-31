@@ -1,0 +1,10 @@
+[General]
+LockSidebar=true
+ShowSidebar=true
+
+[MainWindow]
+StatusBar=Disabled
+splitterSizes=1127,135
+
+[Viewer]
+StatusBar=Disabled

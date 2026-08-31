@@ -1,0 +1,17 @@
+[user]
+	name = Thanos Akrivos
+	email = athanasios.akrvs@gmail.com
+[init]
+	DefaultBranch = main
+[credential]
+	helper = 
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[pull]
+	rebase = true
+[core]
+	editor = nano

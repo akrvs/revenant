@@ -1,0 +1,22 @@
+[Unit]
+Description=llama-swap - on-demand local LLM server (llama.cpp / Vulkan)
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/home/akrvs/ai/bin/llama-swap --config /home/akrvs/ai/etc/llama-swap.yaml --listen 127.0.0.1:8080
+Restart=on-failure
+RestartSec=5
+
+# --- desktop protection ---
+Nice=10
+CPUWeight=40
+CPUQuota=500%
+IOWeight=50
+MemoryHigh=12G
+MemoryMax=18G
+# sacrifice the model before Hyprland if memory gets tight
+OOMScoreAdjust=600
+
+[Install]
+WantedBy=default.target

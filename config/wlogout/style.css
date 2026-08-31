@@ -1,0 +1,54 @@
+/* Terminal / TUI wlogout — wallust themed, monospace bordered cells */
+@import '../../.config/waybar/wallust/colors-waybar.css';
+
+* {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-weight: bold;
+    transition: all 0.15s ease-in-out;
+}
+
+window {
+    font-size: 15pt;
+    color: @foreground;
+    background-color: rgba(10, 10, 14, 0.88);
+}
+
+/* Minimal: no boxes/borders — just the text and the [key] hint */
+button {
+    color: alpha(@foreground, 0.75);
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    border-radius: 0;
+    margin: 10px;
+    padding: 6px;
+    outline-style: none;
+    box-shadow: none;
+}
+
+button:focus,
+button:hover {
+    background-color: transparent;
+    border: none;
+    color: @color12;
+    outline-style: none;
+    box-shadow: none;
+    text-shadow: 0 0 12px @color12;
+}
+
+/* Danger accent: shutdown + reboot turn red on focus/hover */
+#shutdown:focus,
+#shutdown:hover,
+#reboot:focus,
+#reboot:hover {
+    background-color: transparent;
+    border: none;
+    color: #fb4934;
+    text-shadow: 0 0 12px rgba(251, 73, 52, 0.9);
+}
+
+/* Strip all icon images — pure text/terminal look */
+#lock, #logout, #reboot, #shutdown, #suspend, #hibernate,
+#lock:hover, #logout:hover, #reboot:hover, #shutdown:hover, #suspend:hover, #hibernate:hover {
+    background-image: none;
+}

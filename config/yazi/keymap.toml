@@ -1,0 +1,52 @@
+# Mouse
+[[manager.prepend_keymap]]
+on  = ["<MouseLeft>"]
+run = "hover"
+desc = "Hover a file"
+
+[[manager.prepend_keymap]]
+on  = ["<MouseScrollUp>"]
+run = "arrow -5"
+desc = "Scroll up"
+
+[[manager.prepend_keymap]]
+on  = ["<MouseScrollDown>"]
+run = "arrow 5"
+desc = "Scroll down"
+
+# Smart-enter: l and Enter both enter dirs OR open files (no separate 'o')
+[[manager.prepend_keymap]]
+on  = ["l"]
+run = "plugin smart-enter"
+desc = "Enter dir or open file"
+
+[[manager.prepend_keymap]]
+on  = ["<Enter>"]
+run = "plugin smart-enter"
+desc = "Enter dir or open file"
+
+# Quick directory jumps
+[[manager.prepend_keymap]]
+on   = ["g", "h"]
+run  = "cd ~"
+desc = "Go to home"
+
+[[manager.prepend_keymap]]
+on   = ["g", "d"]
+run  = "cd ~/Downloads"
+desc = "Go to Downloads"
+
+[[manager.prepend_keymap]]
+on   = ["g", "D"]
+run  = "cd ~/Documents"
+desc = "Go to Documents"
+
+[[manager.prepend_keymap]]
+on   = ["g", "c"]
+run  = "cd ~/.config"
+desc = "Go to config"
+
+[[manager.prepend_keymap]]
+on   = ["g", "p"]
+run  = "cd ~/Pictures"
+desc = "Go to Pictures"

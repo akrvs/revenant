@@ -1,0 +1,245 @@
+@import url("wallust/colors-waybar.css");
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-weight: bold;
+    font-size: 12px;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+}
+
+window#waybar {
+    background-color: alpha(@color0, 0.90);
+    border-radius: 12px;
+    color: @foreground;
+    transition-property: background-color;
+    transition-duration: 0.3s;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+/* ========== WORKSPACES ========== */
+#workspaces {
+    padding: 0 4px;
+}
+
+#workspaces button {
+    background-color: alpha(@color1, 0.35);
+    color: alpha(@foreground, 0.55);
+    border-radius: 7px;
+    padding: 1px 9px;
+    margin: 4px 2px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button.active {
+    background-color: @color6;
+    color: @color0;
+}
+
+#workspaces button:hover {
+    background-color: alpha(@color6, 0.3);
+    color: @foreground;
+}
+
+#workspaces button.urgent {
+    background-color: @color5;
+    color: @color0;
+}
+
+/* ========== MEDIA (Spotify) ========== */
+#custom-media {
+    color: @color6;
+    padding: 0 8px;
+    font-weight: normal;
+}
+
+#custom-media.paused {
+    color: alpha(@color6, 0.55);
+}
+
+#custom-media.stopped {
+    padding: 0;
+}
+
+/* ========== CENTER CLOCK ========== */
+#clock {
+    background-color: alpha(@color1, 0.45);
+    color: @foreground;
+    border-radius: 9px;
+    padding: 1px 16px;
+    margin: 4px 0;
+    letter-spacing: 1px;
+}
+
+#clock:hover {
+    background-color: alpha(@color1, 0.65);
+}
+
+/* ========== RIGHT PILLS ========== */
+#bluetooth,
+#network,
+#pulseaudio,
+#custom-brightness,
+#cpu,
+#custom-disk,
+#language,
+#custom-cputemp,
+#custom-hypridle,
+#custom-weather,
+#custom-notifications,
+#memory {
+    border-radius: 8px;
+    padding: 1px 10px;
+    margin: 4px 2px;
+    font-weight: bold;
+}
+
+#bluetooth {
+    background-color: @color1;
+    color: @foreground;
+}
+
+#bluetooth.connected {
+    background-color: @color3;
+    color: @foreground;
+}
+
+#network {
+    background-color: @color4;
+    color: @foreground;
+}
+
+#network.disconnected {
+    background-color: alpha(@color4, 0.35);
+    color: alpha(@foreground, 0.5);
+}
+
+#pulseaudio {
+    background-color: @color6;
+    color: @color0;
+}
+
+#custom-brightness {
+    background-color: @color3;
+    color: @color0;
+}
+
+#pulseaudio.muted {
+    background-color: alpha(@color6, 0.35);
+    color: alpha(@color0, 0.6);
+}
+
+#cpu {
+    background-color: @color5;
+    color: @color0;
+}
+
+#custom-cputemp {
+    background-color: alpha(@color5, 0.6);
+    color: @color0;
+    margin-left: 0;
+    border-radius: 0 8px 8px 0;
+    padding-left: 6px;
+}
+
+#cpu {
+    border-radius: 8px 0 0 8px;
+    padding-right: 6px;
+}
+
+#memory {
+    background-color: @color3;
+    color: @foreground;
+}
+
+#custom-hypridle.htb-off {
+    background-color: @color2;
+    color: @foreground;
+}
+
+#custom-hypridle.htb-on {
+    background-color: #a6e3a1;
+    color: @color0;
+}
+
+#language {
+    background-color: @color4;
+    color: @foreground;
+}
+
+#custom-disk {
+    background-color: @color2;
+    color: @foreground;
+}
+
+/* ========== WEATHER ========== */
+#custom-weather {
+    background-color: alpha(@color4, 0.35);
+    color: @foreground;
+}
+
+#custom-weather:hover {
+    background-color: alpha(@color4, 0.55);
+}
+
+/* ========== NOTIFICATION BELL ========== */
+#custom-notifications {
+    margin-right: 10px;
+    padding-left: 12px;
+    padding-right: 14px;
+}
+
+#custom-notifications.idle {
+    background-color: alpha(@color1, 0.45);
+    color: alpha(@foreground, 0.8);
+}
+
+#custom-notifications.unread {
+    background-color: @color6;
+    color: @color0;
+}
+
+#custom-notifications.dnd {
+    background-color: alpha(@color5, 0.4);
+    color: alpha(@foreground, 0.6);
+}
+
+#custom-notifications:hover {
+    background-color: alpha(@color6, 0.5);
+    color: @foreground;
+}
+
+/* ========== GPU + SYSLOAD (joined telemetry pill) ========== */
+#custom-gpu {
+    background-color: @color4;
+    color: @foreground;
+    border-radius: 8px 0 0 8px;
+    padding: 1px 6px 1px 10px;
+    margin: 4px 0 4px 2px;
+    font-weight: bold;
+}
+
+#custom-sysload {
+    background-color: alpha(@color4, 0.6);
+    color: @foreground;
+    border-radius: 0 8px 8px 0;
+    padding: 1px 10px 1px 6px;
+    margin: 4px 2px 4px 0;
+    font-weight: bold;
+}
+
+/* ========== CALENDAR TOOLTIP ========== */
+tooltip {
+    background-color: alpha(@color0, 0.95);
+    border-radius: 12px;
+    border: 1px solid @color1;
+    padding: 6px;
+}
+
+tooltip label {
+    color: @foreground;
+}

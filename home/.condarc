@@ -1,0 +1,6 @@
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+channel_priority: strict
+auto_activate: false

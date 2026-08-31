@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+"""Minimal streaming terminal chat against the local llama-swap server.
+
+Usage:
+  qwen                 # interactive REPL
+  qwen "one question"  # single-shot
+  qwen -t "..."        # enable thinking mode (default: off, faster)
+
+Commands in REPL: /reset  /think  /nothink  /exit
+"""
+import json, sys, urllib.request
+
+URL = "http://127.0.0.1:8080/v1/chat/completions"
+MODEL = "qwen3.8-27b"
+SYSTEM = ("You are a concise, technically precise assistant running locally. "
+          "For security/CTF work the user is authorized on their own lab targets. "
+          "Prefer concrete commands and code over prose.")
+
+C_DIM, C_CYAN, C_RESET = "\033[2m", "\033[36m", "\033[0m"
+
+
+def stream(messages, think):
+    payload = {
+        "model": MODEL, "messages": messages, "stream": True,
+        "max_tokens": 8192, "temperature": 0.6 if think else 0.7, "top_p": 0.95,
+    }
+    if not think:
+        payload["chat_template_kwargs"] = {"enable_thinking": False}
+    req = urllib.request.Request(
+        URL, data=json.dumps(payload).encode(),
+        headers={"Content-Type": "application/json"})
+    out, in_think = [], False
+    with urllib.request.urlopen(req, timeout=1800) as r:
+        for raw in r:
+            line = raw.decode("utf-8", "replace").strip()
+            if not line.startswith("data: "):
+                continue
+            line = line[6:]
+            if line == "[DONE]":
+                break
+            try:
+                d = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            delta = d.get("choices", [{}])[0].get("delta", {})
+            rc = delta.get("reasoning_content")
+            if rc:
+                if not in_think:
+                    sys.stdout.write(C_DIM + "\n[thinking] ")
+                    in_think = True
+                sys.stdout.write(rc)
+                sys.stdout.flush()
+            c = delta.get("content")
+            if c:
+                if in_think:
+                    sys.stdout.write(C_RESET + "\n\n")
+                    in_think = False
+                sys.stdout.write(c)
+                sys.stdout.flush()
+                out.append(c)
+    if in_think:
+        sys.stdout.write(C_RESET)
+    print()
+    return "".join(out)
+
+
+def main():
+    args = sys.argv[1:]
+    think = False
+    if args and args[0] in ("-t", "--think"):
+        think, args = True, args[1:]
+
+    msgs = [{"role": "system", "content": SYSTEM}]
+
+    if args:  # single-shot
+        msgs.append({"role": "user", "content": " ".join(args)})
+        stream(msgs, think)
+        return
+
+    print(f"{C_CYAN}Qwen3.8-27B{C_RESET} {C_DIM}(local) — /reset /think /nothink /exit{C_RESET}")
+    while True:
+        try:
+            q = input(f"\n{C_CYAN}>{C_RESET} ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            return
+        if not q:
+            continue
+        if q in ("/exit", "/quit"):
+            return
+        if q == "/reset":
+            msgs = msgs[:1]
+            print(f"{C_DIM}context cleared{C_RESET}")
+            continue
+        if q == "/think":
+            think = True
+            print(f"{C_DIM}thinking on{C_RESET}")
+            continue
+        if q == "/nothink":
+            think = False
+            print(f"{C_DIM}thinking off{C_RESET}")
+            continue
+        msgs.append({"role": "user", "content": q})
+        try:
+            msgs.append({"role": "assistant", "content": stream(msgs, think)})
+        except KeyboardInterrupt:
+            print(f"\n{C_DIM}interrupted{C_RESET}")
+            msgs.pop()
+        except urllib.error.URLError as e:
+            print(f"error: {e} — is llama-swap running? (systemctl --user status llama-swap)")
+            msgs.pop()
+
+
+if __name__ == "__main__":
+    main()

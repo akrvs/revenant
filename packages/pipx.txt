@@ -1,0 +1,9 @@
+bloodhound
+certipy-ad
+coercer
+git-dumper
+impacket
+pyprland
+pypykatz
+pywhisker
+volatility3

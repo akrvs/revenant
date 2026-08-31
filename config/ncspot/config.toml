@@ -1,0 +1,28 @@
+# ncspot — hacker/terminal palette for WS1 NOC music panel
+use_nerdfont = true
+notify = false
+gapless = true
+
+# ncspot ships with NO play/pause key by default — add the obvious ones
+[keybindings]
+"Space" = "playpause"
+"p" = "playpause"
+
+[theme]
+background = "default"
+primary = "light white"
+secondary = "light blue"
+title = "light magenta"
+playing = "light cyan"
+playing_selected = "black"
+playing_bg = "default"
+highlight = "black"
+highlight_bg = "light white"
+error = "light red"
+error_bg = "default"
+statusbar = "light white"
+statusbar_progress = "light cyan"
+statusbar_bg = "default"
+cmdline = "light white"
+cmdline_bg = "default"
+search_match = "light yellow"

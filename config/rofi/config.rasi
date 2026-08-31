@@ -1,0 +1,168 @@
+/* ---- terminal-grid launcher — hacker style, wallust-colored, no icons ---- */
+
+configuration {
+    modi:                       "drun,filebrowser";
+    show-icons:                 false;
+    display-drun:               "apps";
+    display-filebrowser:        "files";
+    drun-display-format:        "{name}";
+    hover-select:               true;
+    me-select-entry:            "MouseSecondary";
+    me-accept-entry:            "MousePrimary";
+    dpi:                        1;
+    kb-element-next:            "";
+    kb-mode-next:               "Tab";
+    kb-mode-previous:           "Shift+Tab";
+    font:                       "JetBrainsMono Nerd Font 11";
+}
+
+/* ---- Load wallust colors ---- */
+@theme "~/.config/rofi/wallust/colors-rofi.rasi"
+
+* {
+    background-alt:   @selected-active-background;
+    selected:         @selected-urgent-background;
+    active:           @selected-normal-background;
+    urgent:           @selected;
+    text-selected:    @background;
+    text-color:       @foreground;
+    border-color:     @selected;
+}
+
+/* ---- Window: framed terminal box ---- */
+window {
+    enabled:            true;
+    transparency:       "real";
+    cursor:             "default";
+    location:           center;
+    anchor:             center;
+    width:              720px;
+    border:             1px;
+    border-color:       @border-color;
+    border-radius:      0px;
+    background-color:   @background;
+    padding:            0px;
+}
+
+mainbox {
+    padding:            10px;
+    enabled:            true;
+    orientation:        vertical;
+    children:           [ "inputbar", "listbox" ];
+    background-color:   transparent;
+    spacing:            8px;
+}
+
+/* ---- Inputbar: shell prompt ---- */
+inputbar {
+    enabled:            true;
+    padding:            6px 8px;
+    margin:             0px;
+    background-color:   transparent;
+    border:             0px 0px 1px 0px;
+    border-color:       @border-color;
+    border-radius:      0px;
+    orientation:        horizontal;
+    children:           [ "prompt", "entry" ];
+}
+
+prompt {
+    enabled:            true;
+    padding:            0px 8px 0px 0px;
+    background-color:   transparent;
+    text-color:         @active;
+}
+
+entry {
+    enabled:            true;
+    expand:             true;
+    padding:            0px;
+    background-color:   transparent;
+    text-color:         @foreground;
+    cursor:             text;
+    placeholder:        "type to search_";
+    placeholder-color:  @border-color;
+}
+
+/* ---- Listbox / grid ---- */
+listbox {
+    spacing:            0px;
+    padding:            4px 0px 0px 0px;
+    background-color:   transparent;
+    orientation:        vertical;
+    children:           [ "listview" ];
+}
+
+listview {
+    enabled:            true;
+    columns:            2;
+    lines:              9;
+    cycle:              true;
+    dynamic:            true;
+    scrollbar:          false;
+    layout:             vertical;
+    fixed-height:       false;
+    fixed-columns:      false;
+    spacing:            2px;
+    background-color:   transparent;
+    border:             0px;
+}
+
+/* ---- Mode switcher tabs ---- */
+mode-switcher {
+    enabled:            true;
+    spacing:            8px;
+    background-color:   transparent;
+}
+button {
+    padding:            4px 12px;
+    border-radius:      0px;
+    background-color:   transparent;
+    text-color:         @border-color;
+    cursor:             pointer;
+}
+button selected {
+    background-color:   transparent;
+    text-color:         @active;
+}
+
+/* ---- Elements: [ name ] cells ---- */
+element {
+    enabled:            true;
+    spacing:            8px;
+    padding:            6px 10px;
+    border-radius:      0px;
+    background-color:   transparent;
+    text-color:         @foreground;
+    cursor:             pointer;
+}
+element normal.normal   { background-color: inherit;  text-color: inherit; }
+element normal.urgent   { background-color: @urgent;  text-color: @foreground; }
+element normal.active   { background-color: transparent; text-color: @active; }
+element selected.normal {
+    background-color:   @active;
+    text-color:         @text-selected;
+}
+element selected.urgent { background-color: @urgent; text-color: @text-selected; }
+element selected.active { background-color: @active; text-color: @text-selected; }
+element alternate.normal { background-color: transparent; text-color: inherit; }
+
+element-text {
+    background-color:   transparent;
+    text-color:         inherit;
+    cursor:             inherit;
+    vertical-align:     0.5;
+    horizontal-align:   0.0;
+}
+
+/* ---- Message ---- */
+message {
+    background-color:   transparent;
+    border:             0px;
+}
+textbox {
+    padding:            8px;
+    border-radius:      0px;
+    background-color:   transparent;
+    text-color:         @foreground;
+}

@@ -1,0 +1,62 @@
+/* Notification center — floating panel, top-right under the Waybar bell */
+@theme "~/.config/rofi/wallust/colors-rofi.rasi"
+
+* {
+    font: "JetBrainsMono Nerd Font 11";
+}
+
+window {
+    location: northeast;
+    anchor:   northeast;
+    x-offset: -10px;
+    y-offset: 46px;
+    width:    440px;
+    border:          1px;
+    border-color:    @border-color;
+    border-radius:   12px;
+    background-color: @background-color;
+    padding:  8px;
+}
+
+mainbox {
+    children: [ listview ];
+    spacing:  0px;
+    background-color: transparent;
+}
+
+listview {
+    lines:        10;
+    scrollbar:    true;
+    fixed-height: false;
+    dynamic:      true;
+    spacing:      3px;
+    background-color: transparent;
+}
+
+scrollbar {
+    handle-color: @selected-normal-background;
+    handle-width: 4px;
+}
+
+element {
+    padding:       7px 9px;
+    border-radius: 7px;
+    spacing:       8px;
+    background-color: transparent;
+    text-color:      @foreground;
+}
+
+element normal active   { text-color: @selected-normal-background; }
+element selected {
+    background-color: rgba(120,130,160,0.22);
+    text-color:       #FFFFFF;
+}
+element-text {
+    background-color: transparent;
+    text-color:       inherit;
+    vertical-align:   0.5;
+}
+element-icon {
+    enabled: false;
+    size:    0;
+}

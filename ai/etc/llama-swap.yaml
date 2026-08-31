@@ -1,0 +1,29 @@
+# llama-swap: on-demand load/unload for local models
+healthCheckTimeout: 900
+logLevel: info
+startPort: 19000
+
+macros:
+  llama: "/home/akrvs/ai/src/llama.cpp/build/bin/llama-server"
+
+models:
+  "qwen3.8-27b":
+    name: "Qwen3.8 27B (Q3_K_XL, Vulkan)"
+    # unload from VRAM after 15 min idle -> GPU is free when you're not using it
+    ttl: 900
+    cmd: |
+      ${llama}
+      --model /home/akrvs/ai/models/Qwen3.8-27B-UD-Q3_K_XL.gguf
+      --port ${PORT}
+      --host 127.0.0.1
+      --n-gpu-layers 99
+      --ctx-size 49152
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q4_0
+      --threads 5
+      --batch-size 2048
+      --ubatch-size 512
+      --jinja
+      --no-warmup
+      --metrics
