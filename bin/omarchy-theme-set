@@ -24,7 +24,10 @@ source "${TDIR}/theme.conf"
 
 log "applying ${THEME}"
 
-wallust cs "${COLORSCHEME}" -s -q 2>/dev/null || wallust cs "${COLORSCHEME}" -s || fail "wallust failed for ${COLORSCHEME}"
+CS_FILE="${HOME}/.config/wallust/colorschemes/${COLORSCHEME}.json"
+[ -f "${CS_FILE}" ] || fail "missing colorscheme ${CS_FILE}, run omarchy-theme-sync"
+
+wallust cs "${CS_FILE}" -s -q || fail "wallust failed for ${COLORSCHEME}"
 
 if [ -d "${TDIR}/backgrounds" ]; then
 	mapfile -t BGS < <(find "${TDIR}/backgrounds" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) ! -iname 'omarchy.*' | sort)

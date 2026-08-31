@@ -23,7 +23,8 @@ if [ -n "$wallpaper_path" ]; then
     wallust run "$wallpaper_path" -s &
 
     # execute matugen for Spicetify/Cava
-    matugen image "$wallpaper_path" &
+    # --prefer is required: matugen cannot prompt for a source color when run headless
+    matugen image "$wallpaper_path" --prefer saturation &
 
     # wallpaper-derived colors supersede any fixed omarchy theme
     [ -d "$HOME/.config/omarchy" ] && echo dynamic > "$HOME/.config/omarchy/current-theme"

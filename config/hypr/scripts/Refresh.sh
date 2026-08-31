@@ -21,7 +21,6 @@ file_exists() {
 echo "Killing processes..." >> "$LOG"
 pkill -x waybar
 pkill -x rofi
-pkill -x dunst
 #pkill -x ags
 
 # quit ags
@@ -33,9 +32,18 @@ sleep 0.5
 echo "Starting Waybar..." >> "$LOG"
 hyprctl dispatch exec waybar >> "$LOG" 2>&1
 
-# relaunch dunst
+# reload whichever notification daemon owns the bus
 sleep 0.5
-dunst > /dev/null 2>&1 &
+if pgrep -x swaync > /dev/null 2>&1; then
+	echo "Reloading swaync..." >> "$LOG"
+	swaync-client --reload-css >> "$LOG" 2>&1
+	swaync-client --reload-config >> "$LOG" 2>&1
+elif pgrep -x dunst > /dev/null 2>&1; then
+	echo "Restarting dunst..." >> "$LOG"
+	pkill -x dunst
+	sleep 0.3
+	dunst > /dev/null 2>&1 &
+fi
 
 # relaunch ags
 # ags &
