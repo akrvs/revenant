@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+# Upstream waits for BOTH a live notification server on D-Bus and a reply from
+# omarchy's own notifications plugin. That plugin is disabled here because
+# swaync owns notifications, so the upstream check can never pass and callers
+# such as omarchy-crash-watch silently give up. Wait on the D-Bus server alone,
+# which is the part that actually has to be up before a toast is sent.
+
+timeout=${1:-10}
+
+notification_server_ready() {
+	busctl --user call \
+		org.freedesktop.Notifications \
+		/org/freedesktop/Notifications \
+		org.freedesktop.Notifications \
+		GetServerInformation >/dev/null 2>&1
+}
+
+attempts=$((timeout * 10))
+while ((attempts > 0)); do
+	notification_server_ready && exit 0
+	attempts=$((attempts - 1))
+	sleep 0.1
+done
+
+exit 1

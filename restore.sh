@@ -73,6 +73,10 @@ if confirm "reinstall the omarchy shell checkout (hybrid panels + menu)?"; then
 		(cd "${HOME_DIR}/.local/share/omarchy" && patch -p1 <"${REPO}/patches/omarchy-shell-hybrid.patch") ||
 			warn "hybrid patch did not apply, see docs/HYBRID.md"
 	fi
+	if [ -d "${REPO}/omarchy-bin" ]; then
+		cp -a "${REPO}"/omarchy-bin/* "${HOME_DIR}/.local/share/omarchy/bin/" 2>/dev/null || true
+		chmod +x "${HOME_DIR}"/.local/share/omarchy/bin/omarchy-agent-usage-* 2>/dev/null || true
+	fi
 	warn "start it with: omarchy-shell-ctl start"
 fi
 

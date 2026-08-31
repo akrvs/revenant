@@ -1,0 +1,26 @@
+[Unit]
+Description=Announce process crashes and offer an AI diagnosis
+# Needs the session bus to notify, and a terminal to open the diagnosis in.
+# Both are up only after graphical-session.target.
+After=graphical-session.target
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+# Set by omarchy-toggle-crash-capture. Checked here so a disabled watcher stays
+# disabled across logins without the unit having to be disabled.
+ConditionPathExists=!%h/.local/state/omarchy/toggles/crash-capture-off
+
+[Service]
+Type=simple
+# Upstream ships ExecStart=/usr/bin/omarchy-crash-watch, which assumes a
+# system-wide install. This checkout is user-local, and the watcher shells out
+# to sibling omarchy commands, so both the binary and PATH are pointed at it.
+Environment=OMARCHY_PATH=%h/.local/share/omarchy
+# ~/.local/bin comes first so the omarchy-notification-wait shim wins: upstream
+# waits on omarchy's notifications plugin, which is disabled in favour of swaync.
+Environment=PATH=%h/.local/bin:%h/.local/share/omarchy/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=%h/.local/share/omarchy/bin/omarchy-crash-watch
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=graphical-session.target

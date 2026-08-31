@@ -20,7 +20,12 @@ if [ -n "$wallpaper_path" ]; then
 
     # execute wallust (Background to prevent hanging)
     echo 'about to execute wallust'
-    wallust run "$wallpaper_path" -s &
+    wallust run "$wallpaper_path" -s
+
+    # waybar pill text colours are derived from the palette, so regenerate them
+    # before the bar restarts or the new colours may be unreadable
+    [ -x "$HOME/.config/waybar/scripts/gen-contrast.sh" ] && \
+        "$HOME/.config/waybar/scripts/gen-contrast.sh" >/dev/null 2>&1
 
     # execute matugen for Spicetify/Cava
     # --prefer is required: matugen cannot prompt for a source color when run headless

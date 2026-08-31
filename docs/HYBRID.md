@@ -131,6 +131,42 @@ instead:
 Both inherit `config.rasi`, so they follow the active theme like every other
 rofi menu.
 
+### Waybar pill contrast
+
+The Chroma Glow style gives each pill a wallust colour as its background but
+hardcoded `@foreground` or `@color0` as its text. Palettes change with every
+wallpaper and theme, so a fixed choice goes unreadable whenever the background
+lands near the text colour — on Tokyo Night every `@foreground` pill scored
+between 1.06 and 1.49 contrast, against a 4.5 minimum.
+
+`~/.config/waybar/scripts/gen-contrast.sh` reads the generated palette and
+writes `wallust/contrast.css`, defining an `@on-<colour>` for each palette
+colour: whichever of the palette's own extremes (or plain black/white as a
+fallback) scores best by WCAG contrast. The style imports it and every pill now
+pairs `background-color: @colorN` with `color: @on-colorN`.
+
+It regenerates from both theming paths — `rice-theme-set` after `wallust cs`,
+and `WallustSwww.sh` after `wallust run`. The latter also required dropping the
+`&` from that wallust call so the palette is finished before contrast is
+computed from it.
+
+### AI agent usage
+
+The bar's agents pill shows the logo of whichever agent is default, with plan
+percentage where the provider reports limits and spend where it does not.
+Anthropic's mark is an asterisk and OpenAI's knot is approximated by `md-atom`;
+the Nerd Font ships no true OpenAI or opencode logo.
+
+Upstream collects usage for Claude Code, Codex and Fireworks.
+`omarchy-agent-usage-update` discovers collectors by globbing
+`omarchy-agent-usage-*`, so `omarchy-agent-usage-opencode` was added to read
+opencode's own SQLite store; the panel picks it up as a third tab
+automatically. It is a local addition to the checkout, so it is restored from
+this repo rather than by cloning upstream.
+
+Antigravity has no local usage to read — its state holds only opaque protobuf
+sentinels, with the real figures account-side at Google.
+
 ### Clipboard history
 
 `cliphist` records nothing on its own — two `wl-paste --watch` watchers in

@@ -9,14 +9,14 @@ icon_for() {
     # map wttr condition text -> Nerd Font weather glyph (monochrome, matches hacker look)
     local c; c=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     case "$c" in
-        *thunder*|*storm*)              echo "" ;;
-        *snow*|*blizzard*|*sleet*|*ice*) echo "" ;;
-        *rain*|*drizzle*|*shower*)      echo "" ;;
-        *fog*|*mist*|*haze*)            echo "" ;;
-        *overcast*)                     echo "" ;;
-        *cloud*)                        echo "" ;;
-        *clear*|*sunny*)                echo "" ;;
-        *)                              echo "" ;;
+        *thunder*|*storm*)              echo "󰖓" ;;
+        *snow*|*blizzard*|*sleet*|*ice*) echo "󰖘" ;;
+        *rain*|*drizzle*|*shower*)      echo "󰖗" ;;
+        *fog*|*mist*|*haze*)            echo "󰖑" ;;
+        *overcast*)                     echo "󰖐" ;;
+        *cloud*)                        echo "󰖕" ;;
+        *clear*|*sunny*)                echo "󰖙" ;;
+        *)                              echo "󰖐" ;;
     esac
 }
 
@@ -33,7 +33,8 @@ if [ "$age" -gt "$maxage" ]; then
         temp=$(echo "$temp" | tr -d ' +')
         feels=$(echo "$feels" | tr -d ' +')
         icon=$(icon_for "$desc")
-        text="${icon} ${temp}"
+        city=$(echo "$loc" | cut -d, -f1 | sed 's/^ *//;s/ *$//')
+        text="${icon} ${city} ${temp}"
         tooltip="${loc}\\n${desc}\\nTemp ${temp}  (feels ${feels})\\nHumidity ${hum}   Wind ${wind}"
         printf '{"text":"%s","tooltip":"%s","class":"weather"}\n' "$text" "$tooltip" > "$cachefile"
     fi

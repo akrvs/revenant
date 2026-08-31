@@ -29,6 +29,11 @@ CS_FILE="${HOME}/.config/wallust/colorschemes/${COLORSCHEME}.json"
 
 wallust cs "${CS_FILE}" -s -q || fail "wallust failed for ${COLORSCHEME}"
 
+# Pill text colours are picked per palette colour, so they have to be
+# regenerated whenever the palette changes or the bar becomes unreadable.
+[ -x "${HOME}/.config/waybar/scripts/gen-contrast.sh" ] &&
+	"${HOME}/.config/waybar/scripts/gen-contrast.sh" >/dev/null 2>&1 || true
+
 if [ -d "${TDIR}/backgrounds" ]; then
 	mapfile -t BGS < <(find "${TDIR}/backgrounds" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) ! -iname 'omarchy.*' | sort)
 	if [ ${#BGS[@]} -gt 0 ]; then

@@ -1,4 +1,5 @@
 @import url("wallust/colors-waybar.css");
+@import url("wallust/contrast.css");
 
 * {
     font-family: "JetBrainsMono Nerd Font";
@@ -12,7 +13,7 @@
 window#waybar {
     background-color: alpha(@color0, 0.90);
     border-radius: 12px;
-    color: @foreground;
+    color: @on-color0;
     transition-property: background-color;
     transition-duration: 0.3s;
 }
@@ -28,7 +29,7 @@ window#waybar.hidden {
 
 #workspaces button {
     background-color: alpha(@color1, 0.35);
-    color: alpha(@foreground, 0.55);
+    color: alpha(@on-color1, 0.55);
     border-radius: 7px;
     padding: 1px 9px;
     margin: 4px 2px;
@@ -37,17 +38,17 @@ window#waybar.hidden {
 
 #workspaces button.active {
     background-color: @color6;
-    color: @color0;
+    color: @on-color6;
 }
 
 #workspaces button:hover {
     background-color: alpha(@color6, 0.3);
-    color: @foreground;
+    color: @on-color6;
 }
 
 #workspaces button.urgent {
     background-color: @color5;
-    color: @color0;
+    color: @on-color5;
 }
 
 /* ========== MEDIA (Spotify) ========== */
@@ -68,7 +69,7 @@ window#waybar.hidden {
 /* ========== CENTER CLOCK ========== */
 #clock {
     background-color: alpha(@color1, 0.45);
-    color: @foreground;
+    color: @on-color1;
     border-radius: 9px;
     padding: 1px 16px;
     margin: 4px 0;
@@ -91,6 +92,7 @@ window#waybar.hidden {
 #custom-hypridle,
 #custom-weather,
 #custom-notifications,
+#custom-agents,
 #memory {
     border-radius: 8px;
     padding: 1px 10px;
@@ -100,47 +102,47 @@ window#waybar.hidden {
 
 #bluetooth {
     background-color: @color1;
-    color: @foreground;
+    color: @on-color1;
 }
 
 #bluetooth.connected {
     background-color: @color3;
-    color: @foreground;
+    color: @on-color3;
 }
 
 #network {
     background-color: @color4;
-    color: @foreground;
+    color: @on-color4;
 }
 
 #network.disconnected {
     background-color: alpha(@color4, 0.35);
-    color: alpha(@foreground, 0.5);
+    color: alpha(@on-color4, 0.5);
 }
 
 #pulseaudio {
     background-color: @color6;
-    color: @color0;
+    color: @on-color6;
 }
 
 #custom-brightness {
     background-color: @color3;
-    color: @color0;
+    color: @on-color3;
 }
 
 #pulseaudio.muted {
     background-color: alpha(@color6, 0.35);
-    color: alpha(@color0, 0.6);
+    color: alpha(@on-color6, 0.6);
 }
 
 #cpu {
     background-color: @color5;
-    color: @color0;
+    color: @on-color5;
 }
 
 #custom-cputemp {
     background-color: alpha(@color5, 0.6);
-    color: @color0;
+    color: @on-color5;
     margin-left: 0;
     border-radius: 0 8px 8px 0;
     padding-left: 6px;
@@ -153,12 +155,12 @@ window#waybar.hidden {
 
 #memory {
     background-color: @color3;
-    color: @foreground;
+    color: @on-color3;
 }
 
 #custom-hypridle.htb-off {
     background-color: @color2;
-    color: @foreground;
+    color: @on-color2;
 }
 
 #custom-hypridle.htb-on {
@@ -168,18 +170,18 @@ window#waybar.hidden {
 
 #language {
     background-color: @color4;
-    color: @foreground;
+    color: @on-color4;
 }
 
 #custom-disk {
     background-color: @color2;
-    color: @foreground;
+    color: @on-color2;
 }
 
 /* ========== WEATHER ========== */
 #custom-weather {
     background-color: alpha(@color4, 0.35);
-    color: @foreground;
+    color: @on-color4;
 }
 
 #custom-weather:hover {
@@ -195,28 +197,28 @@ window#waybar.hidden {
 
 #custom-notifications.idle {
     background-color: alpha(@color1, 0.45);
-    color: alpha(@foreground, 0.8);
+    color: alpha(@on-color1, 0.8);
 }
 
 #custom-notifications.unread {
     background-color: @color6;
-    color: @color0;
+    color: @on-color6;
 }
 
 #custom-notifications.dnd {
     background-color: alpha(@color5, 0.4);
-    color: alpha(@foreground, 0.6);
+    color: alpha(@on-color5, 0.6);
 }
 
 #custom-notifications:hover {
     background-color: alpha(@color6, 0.5);
-    color: @foreground;
+    color: @on-color6;
 }
 
 /* ========== GPU + SYSLOAD (joined telemetry pill) ========== */
 #custom-gpu {
     background-color: @color4;
-    color: @foreground;
+    color: @on-color4;
     border-radius: 8px 0 0 8px;
     padding: 1px 6px 1px 10px;
     margin: 4px 0 4px 2px;
@@ -225,7 +227,7 @@ window#waybar.hidden {
 
 #custom-sysload {
     background-color: alpha(@color4, 0.6);
-    color: @foreground;
+    color: @on-color4;
     border-radius: 0 8px 8px 0;
     padding: 1px 10px 1px 6px;
     margin: 4px 2px 4px 0;
@@ -242,4 +244,25 @@ tooltip {
 
 tooltip label {
     color: @foreground;
+}
+
+/* AI agent plan usage */
+#custom-agents.ok {
+    background-color: @color4;
+    color: @on-color4;
+}
+
+#custom-agents.warning {
+    background-color: @color3;
+    color: @on-color3;
+}
+
+#custom-agents.critical {
+    background-color: @color1;
+    color: @on-color1;
+}
+
+#custom-agents.idle {
+    background-color: alpha(@color8, 0.55);
+    color: @on-color8;
 }

@@ -1,0 +1,156 @@
+#!/usr/bin/env python3
+
+# omarchy:summary=Print the opencode usage record as JSON
+# omarchy:group=agent
+#
+# Local addition, not shipped by Omarchy. omarchy-agent-usage-update discovers
+# collectors by globbing omarchy-agent-usage-*, so dropping this in is enough.
+#
+# opencode is pay-as-you-go against whichever provider a session used, so there
+# are no plan limits to report; cost and tokens come from its own SQLite store.
+
+import json
+import os
+import sqlite3
+import sys
+from datetime import datetime, timezone
+
+DB = os.path.expanduser(
+    os.environ.get("OPENCODE_DB", "~/.local/share/opencode/opencode.db")
+)
+
+SCHEMA = {
+    "schemaVersion": 1,
+    "id": "opencode",
+    "name": "OpenCode",
+    "updatedAt": datetime.now(timezone.utc).isoformat(),
+    "ready": False,
+    "hasLocalStats": False,
+    "scope": "local",
+    "hasPromptStats": True,
+    "tierLabel": "Pay as you go",
+    "usageStatusText": "OpenCode has no local sessions yet",
+    "authHelpText": "Run a session in opencode to populate usage.",
+    "limits": [],
+    "todayPrompts": 0,
+    "todaySessions": 0,
+    "todayTotalTokens": 0,
+    "todayTokensByModel": {},
+    "recentDays": [],
+    "totalPrompts": 0,
+    "totalSessions": 0,
+    "activeDays": 0,
+    "activeDates": [],
+    "modelUsage": {},
+}
+
+
+def model_name(raw):
+    if not raw:
+        return "unknown"
+    try:
+        d = json.loads(raw)
+    except (TypeError, ValueError):
+        return str(raw)
+    if not isinstance(d, dict):
+        return str(raw)
+    return d.get("id") or d.get("modelID") or "unknown"
+
+
+def emit(record):
+    json.dump(record, sys.stdout)
+    sys.stdout.write("\n")
+
+
+def main():
+    out = dict(SCHEMA)
+
+    if not os.path.exists(DB):
+        emit(out)
+        return
+
+    try:
+        con = sqlite3.connect(f"file:{DB}?mode=ro", uri=True, timeout=5)
+    except sqlite3.Error:
+        emit(out)
+        return
+
+    try:
+        rows = con.execute(
+            "SELECT model, cost, tokens_input, tokens_output, tokens_reasoning,"
+            "       tokens_cache_read, tokens_cache_write, time_created"
+            "  FROM session"
+        ).fetchall()
+        prompts = con.execute("SELECT COUNT(*) FROM message").fetchone()[0]
+    except sqlite3.Error:
+        emit(out)
+        return
+    finally:
+        con.close()
+
+    if not rows:
+        emit(out)
+        return
+
+    today = datetime.now().date()
+    total_cost = 0.0
+    dates = set()
+    by_model = {}
+    today_tokens = 0
+    today_sessions = 0
+    today_by_model = {}
+
+    for model, cost, tin, tout, treason, tcread, tcwrite, created in rows:
+        name = model_name(model)
+        tin, tout = tin or 0, tout or 0
+        treason, tcread, tcwrite = treason or 0, tcread or 0, tcwrite or 0
+        total_cost += cost or 0.0
+
+        entry = by_model.setdefault(
+            name,
+            {
+                "inputTokens": 0,
+                "outputTokens": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0,
+            },
+        )
+        entry["inputTokens"] += tin
+        entry["outputTokens"] += tout + treason
+        entry["cacheReadInputTokens"] += tcread
+        entry["cacheCreationInputTokens"] += tcwrite
+
+        if created:
+            day = datetime.fromtimestamp(created / 1000).date()
+            dates.add(day.isoformat())
+            if day == today:
+                today_sessions += 1
+                today_tokens += tin + tout
+                today_by_model[name] = today_by_model.get(name, 0) + tin + tout
+
+    # The panel renders usageStatusText as an alert surface whose body is
+    # authHelpText, so a status with nothing to act on shows up as an empty red
+    # box. Normal spend belongs in the hero line instead: heroMeta falls back to
+    # tierLabel when usageStatusText is blank.
+    out.update(
+        {
+            "ready": True,
+            "hasLocalStats": True,
+            "tierLabel": f"Pay as you go · ${total_cost:.2f} across {len(rows)} sessions",
+            "usageStatusText": "",
+            "authHelpText": "",
+            "totalSessions": len(rows),
+            "totalPrompts": prompts,
+            "todaySessions": today_sessions,
+            "todayTotalTokens": today_tokens,
+            "todayTokensByModel": today_by_model,
+            "activeDates": sorted(dates),
+            "activeDays": len(dates),
+            "modelUsage": by_model,
+        }
+    )
+    emit(out)
+
+
+if __name__ == "__main__":
+    main()

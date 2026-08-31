@@ -4,12 +4,9 @@
     "omarchy.lock",
     "omarchy.polkit",
     "omarchy.background",
-    "omarchy.notifications"
+    "omarchy.notifications",
+    "omarchy.idle"
   ],
-  "idle": {
-    "screensaver": 0,
-    "lock": 0
-  },
   "bar": {
     "position": "top",
     "transparent": true,
@@ -37,6 +34,9 @@
         }
       ],
       "right": [
+        {
+          "id": "omarchy.agents"
+        },
         {
           "id": "omarchy.tray"
         },

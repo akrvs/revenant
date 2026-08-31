@@ -54,6 +54,12 @@ for s in "${HOME_DIR}"/.config/waybar/scripts/omarchy-*.sh; do
 	[ -f "${s}" ] && cp -a "${s}" "${REPO}/config/waybar/scripts/" 2>/dev/null || true
 done
 
+log "local additions to the omarchy checkout"
+mkdir -p "${REPO}/omarchy-bin"
+for s in "${HOME_DIR}"/.local/share/omarchy/bin/omarchy-agent-usage-opencode; do
+	[ -f "${s}" ] && cp -a "${s}" "${REPO}/omarchy-bin/"
+done
+
 log "local-bin manifest"
 ls -1 "${HOME_DIR}/.local/bin" 2>/dev/null >"${REPO}/packages/local-bin-manifest.txt" || true
 

@@ -99,6 +99,7 @@ netview.py
 nmapAnswerMachine.py
 ntfs-read.py
 ntlmrelayx.py
+omarchy-agent
 omarchy-capture-qr
 omarchy-capture-region
 omarchy-capture-screenrecording
@@ -107,6 +108,7 @@ omarchy-ipc
 omarchy-launch-or-focus
 omarchy-launch-or-focus-tui
 omarchy-launch-or-focus-webapp
+omarchy-notification-wait
 omarchy-panel
 omarchy-run
 omarchy-shell-ctl
@@ -194,3 +196,5 @@ wmipersist.py
 wmiquery.py
 wsdump
 wsuks
+xdg-terminal-exec
+zed

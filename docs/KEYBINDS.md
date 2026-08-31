@@ -50,6 +50,21 @@ Walker and the elephant daemon. See the note in [`HYBRID.md`](HYBRID.md).
 | `Super + Shift + D` | Todo list |
 | `Super + Alt + P` | Package search and install (pacman + AUR) |
 
+## AI agents
+
+| Keys | Action |
+| --- | --- |
+| `Super + Shift + A` | Agent plan usage panel (Claude Code, Codex, OpenCode) |
+| `Super + Shift + Ctrl + A` | Launch the default coding agent |
+
+The bar also carries an agents pill showing the current agent's logo and its
+headline number, which opens the same panel on click.
+
+**The launcher runs agents with permissions bypassed** — `claude
+--permission-mode auto`, `codex --approve-for-me`,
+`agy --dangerously-skip-permissions`, `opencode --auto`. That is deliberate;
+drop the flag in `omarchy-agent` if it should ask first.
+
 ## Misc
 
 | Keys | Action |

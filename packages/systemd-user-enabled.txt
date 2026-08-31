@@ -1,4 +1,5 @@
 llama-swap.service
+omarchy-crash-watch.service
 swaync.service
 wireplumber.service
 xdg-user-dirs.service
