@@ -38,6 +38,18 @@ terminal.
 | `Super + Print` | Screenshot (pre-existing, swappy) |
 | `Super + Shift + S` | Screenshot with annotation (pre-existing) |
 
+## Rofi utilities
+
+Walker's useful providers, rebuilt as rofi scripts rather than installing
+Walker and the elephant daemon. See the note in [`HYBRID.md`](HYBRID.md).
+
+| Keys | Action |
+| --- | --- |
+| `Super + Shift + C` | Calculator (qalculate) |
+| `Super + Alt + S` | Web search |
+| `Super + Shift + D` | Todo list |
+| `Super + Alt + P` | Package search and install (pacman + AUR) |
+
 ## Misc
 
 | Keys | Action |

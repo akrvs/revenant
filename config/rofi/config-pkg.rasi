@@ -1,0 +1,22 @@
+/* ---- 💫 https://github.com/JaKooLit 💫 ---- */
+/* Rofi Config for pkg */
+
+@import "~/.config/rofi/config.rasi"
+
+/* ---- Window ---- */
+window {
+	width: 45%;
+    y-offset: 6px;
+    location: north;
+}
+
+/* ---- Inputbar ---- */
+inputbar {
+    enabled: true;
+}
+
+/* ---- Listview ---- */
+listview {
+    columns: 1;
+    lines: 10;
+}

@@ -1,0 +1,33 @@
+/* ---- 💫 https://github.com/JaKooLit 💫 ---- */
+/* Rofi Config for the todo list */
+
+@import "~/.config/rofi/config.rasi"
+
+/* ---- Window ---- */
+window {
+	width: 45%;
+    y-offset: 6px;
+    location: north;
+}
+
+/* ---- Inputbar ---- */
+inputbar {
+    enabled: true;
+}
+
+/* ---- Mainbox ---- */
+/* the base config omits "message", but the key hints live there */
+mainbox {
+    children: [ "inputbar", "message", "listbox" ];
+}
+
+/* ---- Listview ---- */
+listview {
+    columns: 1;
+    lines: 10;
+}
+
+/* ---- Entry ---- */
+entry {
+    placeholder: "󰄲 Add a task, or pick one to toggle";
+}

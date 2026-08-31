@@ -107,6 +107,30 @@ so `~/.local/bin/uwsm-app` is a shim that strips the wrapper and runs the
 command directly. Without it every `omarchy-launch-*` script fails with
 `setsid: failed to execute uwsm-app`.
 
+### Why there is no Walker
+
+Walker was Omarchy 3's launcher. Omarchy 4 retired it: the v3→v4 upgrade's
+`remove_retired_default_packages()` uninstalls `walker-bin`, `omarchy-walker`
+and every `elephant-*` provider, in the same cull as waybar, hyprlock, mako and
+satty. The Quickshell menu's Apps section replaced it.
+
+Walker upstream is alive and well, but adopting it would mean an AUR build, a
+persistent `elephant` daemon, and GTK4 theming that does not follow wallust.
+Most of what it offers already exists here — rofi covers apps and files, and
+clipboard, emoji and window switching are all bound already. The genuinely
+missing providers, a todo list and package search, are small rofi scripts
+instead:
+
+- `~/.config/hypr/UserScripts/RofiTodo.sh` — plain-text store at
+  `~/.local/share/todo.txt`, one task per line, `x ` prefix marks it done.
+  Enter adds or toggles, Alt+Delete removes, Alt+c clears the done ones.
+- `~/.config/hypr/UserScripts/RofiPkg.sh` — searches pacman and the AUR in one
+  list, marks what is installed, and installs the pick through pacman or yay in
+  a terminal.
+
+Both inherit `config.rasi`, so they follow the active theme like every other
+rofi menu.
+
 ### Clipboard history
 
 `cliphist` records nothing on its own — two `wl-paste --watch` watchers in
