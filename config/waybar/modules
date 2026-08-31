@@ -254,7 +254,7 @@
 },
 "custom/swaync": {
 	"tooltip": true,
-	"format": "{icon} {}",
+	"format": "{icon} {text}",
 	"format-icons": {
 		"notification": "<span foreground='red'><sup></sup></span>",
 		"none": "",
@@ -280,7 +280,7 @@
 	"interval": 3600,
 	"return-type": "json",
 	//"exec": "~/.config/hypr/UserScripts/Weather.sh",
-	"exec": "~/.config/hypr/UserScripts/Weather.py",
+	"exec": "~/.config/hypr/UserScripts/Weather.sh",
 	"exec-if": "ping wttr.in -c1",
 	"tooltip": true,
 },
@@ -471,7 +471,7 @@
   },
   "custom/notifications": {
     "tooltip": false,
-    "format": "{icon} {}",
+    "format": "{icon} {text}",
     "format-icons": {
       "notification": "󱅫",
       "none": "󰂚",
