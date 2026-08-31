@@ -1,0 +1,159 @@
+#!/usr/bin/env python3
+
+import json
+import os
+import subprocess
+import sys
+import tomllib
+import urllib.request
+from pathlib import Path
+
+REPO = "basecamp/omarchy"
+REF = "quattro"
+RAW = f"https://raw.githubusercontent.com/{REPO}/{REF}"
+
+HOME = Path.home()
+THEMES_DIR = HOME / ".config" / "omarchy" / "themes"
+CS_DIR = HOME / ".config" / "wallust" / "colorschemes"
+
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+RED = "\033[31m"
+RESET = "\033[0m"
+
+
+def log(msg):
+    print(f"{GREEN}::{RESET} {msg}")
+
+
+def warn(msg):
+    print(f"{YELLOW}!!{RESET} {msg}")
+
+
+def fail(msg):
+    print(f"{RED}xx{RESET} {msg}", file=sys.stderr)
+
+
+def repo_tree():
+    out = subprocess.run(
+        ["gh", "api", f"repos/{REPO}/git/trees/{REF}?recursive=1", "--jq", ".tree[].path"],
+        capture_output=True,
+        text=True,
+    )
+    if out.returncode != 0:
+        fail("could not read repo tree, is gh authenticated?")
+        sys.exit(1)
+    return out.stdout.splitlines()
+
+
+def fetch(path):
+    with urllib.request.urlopen(f"{RAW}/{path}", timeout=30) as r:
+        return r.read()
+
+
+def pick(colors, *keys, default="#000000"):
+    for k in keys:
+        v = colors.get(k)
+        if v:
+            return v
+    return default
+
+
+def to_wallust(c):
+    bg = pick(c, "background", default="#000000")
+    fg = pick(c, "foreground", default="#ffffff")
+    return {
+        "special": {
+            "background": bg,
+            "foreground": fg,
+            "cursor": pick(c, "accent", "foreground", default=fg),
+        },
+        "colors": {
+            "color0": pick(c, "dark_background", "background", default=bg),
+            "color1": pick(c, "red", default="#ff5555"),
+            "color2": pick(c, "green", default="#50fa7b"),
+            "color3": pick(c, "yellow", default="#f1fa8c"),
+            "color4": pick(c, "blue", default="#6272a4"),
+            "color5": pick(c, "magenta", default="#ff79c6"),
+            "color6": pick(c, "cyan", default="#8be9fd"),
+            "color7": fg,
+            "color8": pick(c, "dark_foreground", "muted", default="#6272a4"),
+            "color9": pick(c, "bright_red", "red", default="#ff6e6e"),
+            "color10": pick(c, "bright_green", "green", default="#69ff94"),
+            "color11": pick(c, "bright_yellow", "yellow", default="#ffffa5"),
+            "color12": pick(c, "bright_blue", "blue", default="#d6acff"),
+            "color13": pick(c, "bright_magenta", "magenta", default="#ff92df"),
+            "color14": pick(c, "bright_cyan", "cyan", default="#a4ffff"),
+            "color15": pick(c, "bright_foreground", "foreground", default=fg),
+        },
+    }
+
+
+def main():
+    want_backgrounds = "--no-backgrounds" not in sys.argv
+    only = [a for a in sys.argv[1:] if not a.startswith("-")]
+
+    THEMES_DIR.mkdir(parents=True, exist_ok=True)
+    CS_DIR.mkdir(parents=True, exist_ok=True)
+
+    log("reading omarchy repo tree")
+    paths = repo_tree()
+
+    themes = sorted({p.split("/")[1] for p in paths if p.startswith("themes/") and len(p.split("/")) > 2})
+    if only:
+        themes = [t for t in themes if t in only]
+    if not themes:
+        fail("no matching themes")
+        sys.exit(1)
+
+    backgrounds = {}
+    for p in paths:
+        parts = p.split("/")
+        if len(parts) == 4 and parts[0] == "themes" and parts[2] == "backgrounds":
+            backgrounds.setdefault(parts[1], []).append(p)
+
+    synced = 0
+    for name in themes:
+        toml_path = f"themes/{name}/colors.toml"
+        if toml_path not in paths:
+            warn(f"{name}: no colors.toml, skipped")
+            continue
+        try:
+            colors = tomllib.loads(fetch(toml_path).decode("utf-8"))
+        except Exception as e:
+            warn(f"{name}: could not parse colors.toml ({e})")
+            continue
+
+        tdir = THEMES_DIR / name
+        tdir.mkdir(parents=True, exist_ok=True)
+
+        cs = CS_DIR / f"omarchy-{name}.json"
+        cs.write_text(json.dumps(to_wallust(colors), indent=2))
+
+        mode = colors.get("mode", "dark")
+        accent = colors.get("accent", "")
+        (tdir / "theme.conf").write_text(
+            f"COLORSCHEME=omarchy-{name}\nMODE={mode}\nACCENT={accent}\n"
+        )
+
+        if want_backgrounds:
+            bgdir = tdir / "backgrounds"
+            bgdir.mkdir(exist_ok=True)
+            for bp in sorted(backgrounds.get(name, [])):
+                fn = bp.split("/")[-1]
+                dest = bgdir / fn
+                if dest.exists():
+                    continue
+                try:
+                    dest.write_bytes(fetch(bp))
+                except Exception:
+                    warn(f"{name}: could not fetch {fn}")
+
+        log(f"{name} ({mode})")
+        synced += 1
+
+    log(f"synced {synced} themes into {THEMES_DIR}")
+
+
+if __name__ == "__main__":
+    main()

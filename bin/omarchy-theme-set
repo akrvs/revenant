@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+OMARCHY_DIR="${HOME}/.config/omarchy"
+THEMES_DIR="${OMARCHY_DIR}/themes"
+STATE="${OMARCHY_DIR}/current-theme"
+HYPR_SCRIPTS="${HOME}/.config/hypr/scripts"
+
+log() { printf '\033[32m::\033[0m %s\n' "$1"; }
+fail() { printf '\033[31mxx\033[0m %s\n' "$1" >&2; exit 1; }
+
+[ $# -ge 1 ] || fail "usage: omarchy-theme-set <theme>"
+
+THEME="$1"
+TDIR="${THEMES_DIR}/${THEME}"
+[ -d "${TDIR}" ] || fail "unknown theme: ${THEME}"
+[ -f "${TDIR}/theme.conf" ] || fail "missing theme.conf for ${THEME}"
+
+COLORSCHEME=""
+MODE="dark"
+ACCENT=""
+# shellcheck disable=SC1090
+source "${TDIR}/theme.conf"
+
+log "applying ${THEME}"
+
+wallust cs "${COLORSCHEME}" -s -q 2>/dev/null || wallust cs "${COLORSCHEME}" -s || fail "wallust failed for ${COLORSCHEME}"
+
+if [ -d "${TDIR}/backgrounds" ]; then
+	mapfile -t BGS < <(find "${TDIR}/backgrounds" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) ! -iname 'omarchy.*' | sort)
+	if [ ${#BGS[@]} -gt 0 ]; then
+		BG="${BGS[0]}"
+		if [ -n "${OMARCHY_RANDOM_BG:-}" ]; then
+			BG="${BGS[RANDOM % ${#BGS[@]}]}"
+		fi
+		MON="$(hyprctl monitors 2>/dev/null | awk '/^Monitor/{name=$2} /focused: yes/{print name}')"
+		if command -v swww >/dev/null 2>&1; then
+			swww query >/dev/null 2>&1 || swww-daemon --format xrgb &
+			sleep 0.2
+			swww img ${MON:+-o "$MON"} "${BG}" \
+				--transition-fps 60 --transition-type random \
+				--transition-duration 1 --transition-bezier .43,1.19,1,.4 || true
+		fi
+		ln -sf "${BG}" "${HOME}/.config/rofi/.current_wallpaper"
+		cp -f "${BG}" "${HOME}/.config/hypr/wallpaper_effects/.wallpaper_current" 2>/dev/null || true
+	fi
+fi
+
+if [ "${MODE}" = "light" ]; then
+	gsettings set org.gnome.desktop.interface color-scheme prefer-light 2>/dev/null || true
+else
+	gsettings set org.gnome.desktop.interface color-scheme prefer-dark 2>/dev/null || true
+fi
+
+hyprctl reload >/dev/null 2>&1 || true
+
+if pgrep -x waybar >/dev/null 2>&1; then
+	killall -9 waybar 2>/dev/null || true
+	sleep 0.3
+	(setsid waybar >/dev/null 2>&1 &) || true
+fi
+
+if pgrep -x swaync >/dev/null 2>&1; then
+	swaync-client --reload-css >/dev/null 2>&1 || true
+	swaync-client --reload-config >/dev/null 2>&1 || true
+fi
+
+if pgrep -x dunst >/dev/null 2>&1; then
+	killall dunst 2>/dev/null || true
+	(setsid dunst >/dev/null 2>&1 &) || true
+fi
+
+if pgrep -x kitty >/dev/null 2>&1; then
+	killall -SIGUSR1 kitty 2>/dev/null || true
+fi
+
+if pgrep -x cava >/dev/null 2>&1; then
+	killall -SIGUSR1 cava 2>/dev/null || true
+fi
+
+echo "${THEME}" >"${STATE}"
+
+notify-send -a "omarchy" "Theme applied" "${THEME} (${MODE})" -i preferences-desktop-theme 2>/dev/null || true
+
+log "done: ${THEME}"

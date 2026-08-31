@@ -41,6 +41,7 @@ streamrip/
 
 spicetify/Themes/
 mpv/subtitles/
+omarchy/themes/*/backgrounds/
 .hyprsetup-backup-*/
 *.img.bak
 

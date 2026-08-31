@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+THEMES_DIR="${HOME}/.config/omarchy/themes"
+STATE="${HOME}/.config/omarchy/current-theme"
+
+mapfile -t THEMES < <(find "${THEMES_DIR}" -mindepth 2 -maxdepth 2 -name theme.conf -printf '%h\n' | xargs -r -n1 basename | sort)
+[ ${#THEMES[@]} -gt 0 ] || { echo "no themes synced, run omarchy-theme-sync" >&2; exit 1; }
+
+CURRENT=""
+[ -f "${STATE}" ] && CURRENT="$(cat "${STATE}")"
+
+NEXT="${THEMES[0]}"
+for i in "${!THEMES[@]}"; do
+	if [ "${THEMES[$i]}" = "${CURRENT}" ]; then
+		NEXT="${THEMES[$(((i + 1) % ${#THEMES[@]}))]}"
+		break
+	fi
+done
+
+exec omarchy-theme-set "${NEXT}"

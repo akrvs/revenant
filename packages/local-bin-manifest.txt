@@ -99,6 +99,11 @@ netview.py
 nmapAnswerMachine.py
 ntfs-read.py
 ntlmrelayx.py
+omarchy-theme-list
+omarchy-theme-menu
+omarchy-theme-next
+omarchy-theme-set
+omarchy-theme-sync
 owneredit.py
 pasteurize
 phd

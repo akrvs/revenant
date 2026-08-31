@@ -52,6 +52,14 @@ if confirm "restore ~/.config?"; then
 	rsync -a "${REPO}/config/" "${HOME_DIR}/.config/"
 fi
 
+if [ -d "${REPO}/bin" ] && confirm "restore omarchy theme tooling?"; then
+	log "omarchy tooling"
+	mkdir -p "${HOME_DIR}/.local/bin"
+	cp -a "${REPO}"/bin/omarchy-* "${HOME_DIR}/.local/bin/" 2>/dev/null || true
+	chmod +x "${HOME_DIR}"/.local/bin/omarchy-* 2>/dev/null || true
+	warn "run omarchy-theme-sync to re-fetch theme wallpapers"
+fi
+
 if confirm "restore AI stack (llama-swap)?"; then
 	log "ai stack"
 	mkdir -p "${HOME_DIR}/ai/etc" "${HOME_DIR}/ai/bin" "${HOME_DIR}/.config/systemd/user"

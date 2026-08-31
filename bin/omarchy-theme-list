@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+THEMES_DIR="${HOME}/.config/omarchy/themes"
+STATE="${HOME}/.config/omarchy/current-theme"
+
+[ -d "${THEMES_DIR}" ] || exit 0
+
+CURRENT=""
+[ -f "${STATE}" ] && CURRENT="$(cat "${STATE}")"
+
+for d in "${THEMES_DIR}"/*/; do
+	[ -f "${d}theme.conf" ] || continue
+	name="$(basename "${d}")"
+	if [ "${name}" = "${CURRENT}" ]; then
+		printf '%s *\n' "${name}"
+	else
+		printf '%s\n' "${name}"
+	fi
+done

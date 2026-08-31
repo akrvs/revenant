@@ -45,6 +45,12 @@ mkdir -p "${REPO}/ai/etc" "${REPO}/ai/bin"
 [ -e "${HOME_DIR}/ai/bin/qwen" ] && cp -a "${HOME_DIR}/ai/bin/qwen" "${REPO}/ai/bin/"
 [ -e "${HOME_DIR}/.config/systemd/user/llama-swap.service" ] && cp -a "${HOME_DIR}/.config/systemd/user/llama-swap.service" "${REPO}/ai/"
 
+log "omarchy tooling"
+mkdir -p "${REPO}/bin"
+for s in "${HOME_DIR}"/.local/bin/omarchy-*; do
+	[ -f "${s}" ] && cp -a "${s}" "${REPO}/bin/"
+done
+
 log "local-bin manifest"
 ls -1 "${HOME_DIR}/.local/bin" 2>/dev/null >"${REPO}/packages/local-bin-manifest.txt" || true
 

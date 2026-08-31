@@ -9,11 +9,11 @@
     symbols: (song: "🎵", dir: "📁", marker: "\u{e0b0}"),
     progress_bar: (
         symbols: ["", "⭘", " "],
-                track_style: (bg: "#0F0F12"),
+                track_style: (bg: "#26202B"),
 
-        elapsed_style: (fg: "#C0C6DA", bg: "#0F0F12"),
+        elapsed_style: (fg: "#FDDBD1", bg: "#26202B"),
 
-        thumb_style: (fg: "#C0C6DA", bg: "#0F0F12"),
+        thumb_style: (fg: "#FDDBD1", bg: "#26202B"),
       
     ),
     scrollbar: (
@@ -22,8 +22,8 @@
         ends_style: (),
     ),
             browser_column_widths: [20, 38, 42],
-    background_color: Some("#0F0F12"),
-    text_color: Some("#C0C6DA"),
+    background_color: Some("#26202B"),
+    text_color: Some("#FDDBD1"),
      layout: Split(
         direction: Vertical,
         panes: [
@@ -48,7 +48,7 @@
         
         (
         
-            prop: (kind: Property(Artist), style: (fg: "#504F5E"), default: (kind: Text("Unknown"))),
+            prop: (kind: Property(Artist), style: (fg: "#F35D7D"), default: (kind: Text("Unknown"))),
             width_percent: 49,
             alignment: Right,
         ),
@@ -72,21 +72,21 @@
 
                     (kind: Text("["), style: (modifiers: "Bold")),
 
-                    (kind: Property(Status(State)), style:(fg: "#504F5E",  modifiers: "Bold")),
+                    (kind: Property(Status(State)), style:(fg: "#F35D7D",  modifiers: "Bold")),
 
                     (kind: Text("]"), style:(modifiers: "Bold"))
 
                 ],
 
                 center: [
-                  (kind: Text(" 󰣐    "), style:(fg: "#504F5E", modifiers: "Bold")),
+                  (kind: Text(" 󰣐    "), style:(fg: "#F35D7D", modifiers: "Bold")),
 
 
                     (kind: Property(Song(Title)), style: (modifiers: "Bold"),
                     
                      default: (kind: Text("No Song"), style: (modifiers: "Bold"))
                      ),    
-                     (kind: Text("   "), style: (fg: "#504F5E",modifiers: "Bold"))
+                     (kind: Text("   "), style: (fg: "#F35D7D",modifiers: "Bold"))
 
                 ],
 
@@ -94,7 +94,7 @@
 
                             right: [
 
-                    (kind: Property(Widget(Volume)), style: (fg: "#6C7AA9"))
+                    (kind: Property(Widget(Volume)), style: (fg: "#F9977C"))
 
                 ]
 
@@ -119,9 +119,9 @@
 
                 center: [
 
-                    (kind: Property(Song(Artist)), style: (fg: "#504F5E", modifiers: "Bold"),
+                    (kind: Property(Song(Artist)), style: (fg: "#F35D7D", modifiers: "Bold"),
 
-                        default: (kind: Text("Unknown"), style: (fg: "#504F5E", modifiers: "Bold"))
+                        default: (kind: Text("Unknown"), style: (fg: "#F35D7D", modifiers: "Bold"))
 
                     ),
 

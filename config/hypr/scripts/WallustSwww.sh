@@ -24,4 +24,7 @@ if [ -n "$wallpaper_path" ]; then
 
     # execute matugen for Spicetify/Cava
     matugen image "$wallpaper_path" &
+
+    # wallpaper-derived colors supersede any fixed omarchy theme
+    [ -d "$HOME/.config/omarchy" ] && echo dynamic > "$HOME/.config/omarchy/current-theme"
 fi

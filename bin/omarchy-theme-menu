@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+THEMES_DIR="${HOME}/.config/omarchy/themes"
+STATE="${HOME}/.config/omarchy/current-theme"
+ROFI_CONF="${HOME}/.config/rofi/config-compact.rasi"
+
+mapfile -t THEMES < <(find "${THEMES_DIR}" -mindepth 2 -maxdepth 2 -name theme.conf -printf '%h\n' 2>/dev/null | xargs -r -n1 basename | sort)
+[ ${#THEMES[@]} -gt 0 ] || { notify-send -a omarchy "No themes" "Run omarchy-theme-sync first" 2>/dev/null; exit 1; }
+
+CURRENT=""
+[ -f "${STATE}" ] && CURRENT="$(cat "${STATE}")"
+
+if pidof rofi >/dev/null; then
+	pkill rofi
+	sleep 0.4
+fi
+
+ROFI_ARGS=(-i -dmenu -p "theme")
+[ -f "${ROFI_CONF}" ] && ROFI_ARGS+=(-config "${ROFI_CONF}")
+
+LIST=""
+for t in "${THEMES[@]}"; do
+	if [ "${t}" = "${CURRENT}" ]; then
+		LIST+="${t}  <span foreground='#888'>current</span>\n"
+	else
+		LIST+="${t}\n"
+	fi
+done
+
+CHOICE="$(printf '%b' "${LIST}" | rofi "${ROFI_ARGS[@]}" -markup-rows | awk '{print $1}')"
+[ -n "${CHOICE}" ] || exit 0
+
+exec omarchy-theme-set "${CHOICE}"

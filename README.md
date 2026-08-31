@@ -53,8 +53,16 @@ config/      hypr · waybar · rofi · wofi · dunst · swaync · wlogout
              wallust · matugen · Kvantum · qt5ct/qt6ct · nvim · yazi
 system/      grub · mkinitcpio · greetd · cpu-powersave.service
 ai/          llama-swap.yaml · qwen launcher · user service unit
+bin/         omarchy theme tooling (sync · set · menu · next · list)
 packages/    pacman explicit + native · AUR · pipx · flatpak · units
 ```
+
+## [ Theming ]
+
+Two modes coexist. `Ctrl + Alt + W` keeps the original wallpaper-driven
+wallust pipeline; `Super + Shift + T` applies one of 22 curated Omarchy
+palettes, ported verbatim from upstream and pushed through the same wallust
+templates so every app reskins at once. See [`docs/THEMES.md`](docs/THEMES.md).
 
 ## [ Deploy ]
 
