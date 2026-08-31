@@ -73,6 +73,45 @@ Super + Ctrl + T       cycle theme
 | `omarchy-panel <id> [toggle\|summon\|hide]` | Open a panel |
 | `omarchy-panel menu [route]` | Open the menu at a route |
 | `omarchy-ipc <target> <method> [args]` | Raw shell IPC |
+| `omarchy-run [cmd]` | Run any omarchy command; lists the exposed set with no args |
+
+## Borrowed omarchy commands
+
+Omarchy ships 441 binaries. Most are installers, updaters, plugin management or
+theme tooling that this setup supersedes. Fourteen are genuinely useful and are
+symlinked to the `omarchy-run` dispatcher, which puts omarchy's `bin/` on PATH
+only for the child process so sibling calls resolve without shadowing anything:
+
+```
+omarchy-capture-text            OCR a screen region into the clipboard
+omarchy-capture-qr              decode a QR code from a region
+omarchy-capture-region          pick a region over frozen screen content
+omarchy-capture-screenrecording start/stop recording (--fullscreen skips the picker)
+omarchy-transcode               compress pictures and videos for sharing
+omarchy-transcode-ascii         render an image as ASCII/Unicode art
+omarchy-webapp-install/-remove  turn a URL into a desktop app with its own launcher
+omarchy-tui-install/-remove     give a TUI app a desktop launcher
+omarchy-launch-or-focus[-tui|-webapp]  launch an app, or focus it if already open
+omarchy-toggle-nightlight       hyprsunset warm/neutral toggle
+```
+
+Extra packages this needs: `gum` (webapp/tui prompts), `hyprsunset`
+(nightlight), `gpu-screen-recorder` (VAAPI recording), `cliphist` (rofi
+clipboard history).
+
+### The uwsm-app shim
+
+Omarchy launches apps through `uwsm-app`, which scopes them into a
+uwsm-managed systemd session. This machine runs plain Hyprland under greetd,
+so `~/.local/bin/uwsm-app` is a shim that strips the wrapper and runs the
+command directly. Without it every `omarchy-launch-*` script fails with
+`setsid: failed to execute uwsm-app`.
+
+### Clipboard history
+
+`cliphist` records nothing on its own — two `wl-paste --watch` watchers in
+`Startup_Apps.conf` feed it, and they back `ClipManager.sh`. Omarchy's own
+clipboard overlay keeps a separate history, so both work independently.
 
 ## Upstream patches
 

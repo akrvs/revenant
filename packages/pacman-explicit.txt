@@ -24,6 +24,7 @@ cameractrls
 candy-icons-git
 cava
 claude-desktop-official-bin
+cliphist
 cmatrix
 corectrl
 cpupower
@@ -58,6 +59,7 @@ glow
 gnome-keyring
 gobuster
 google-chrome
+gpu-screen-recorder
 graphicsmagick
 greetd
 greetd-tuigreet
@@ -65,6 +67,7 @@ grimblast-git
 grub
 grub-btrfs
 gst-plugin-pipewire
+gum
 hashcat
 hdparm
 htop
@@ -73,6 +76,7 @@ hydra
 hypridle
 hyprlock
 hyprpaper
+hyprsunset
 impacket
 imv
 inotify-tools

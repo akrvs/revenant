@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+# Omarchy launches apps via uwsm-app, which scopes them into a uwsm-managed
+# systemd session. This machine runs plain Hyprland under greetd, so there is
+# no such session to join. Run the command directly instead.
+#
+# Accepted shapes: `uwsm-app [opts] -- cmd [args]` and `uwsm-app [opts] cmd`,
+# including a .desktop id in place of cmd.
+
+args=()
+seen_sep=0
+for a in "$@"; do
+	if [ "${seen_sep}" -eq 0 ]; then
+		case "${a}" in
+		--)
+			seen_sep=1
+			continue
+			;;
+		-*) continue ;;
+		esac
+	fi
+	args+=("${a}")
+done
+
+[ ${#args[@]} -gt 0 ] || { echo "uwsm-app: nothing to launch" >&2; exit 1; }
+
+case "${args[0]}" in
+*.desktop | *.desktop:*)
+	entry="${args[0]%%:*}"
+	if command -v gtk-launch >/dev/null 2>&1; then
+		exec gtk-launch "${entry%.desktop}" "${args[@]:1}"
+	elif command -v gio >/dev/null 2>&1; then
+		exec gio launch "${entry}" "${args[@]:1}"
+	fi
+	echo "uwsm-app: cannot launch desktop entry ${entry}" >&2
+	exit 1
+	;;
+esac
+
+exec "${args[@]}"

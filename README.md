@@ -53,7 +53,8 @@ config/      hypr · waybar · rofi · wofi · dunst · swaync · wlogout
              wallust · matugen · Kvantum · qt5ct/qt6ct · nvim · yazi
 system/      grub · mkinitcpio · greetd · cpu-powersave.service
 ai/          llama-swap.yaml · qwen launcher · user service unit
-bin/         omarchy theme tooling (sync · set · menu · next · list)
+bin/         rice-theme tooling · omarchy shell wrappers · borrowed
+             omarchy commands (OCR · QR · record · transcode · webapps)
 packages/    pacman explicit + native · AUR · pipx · flatpak · units
 ```
 
@@ -94,7 +95,7 @@ credentials, wallet stores, and every engagement token (HTB, boot.dev, Qobuz)
 are excluded by rule and verified by a secret scan before each commit. What
 ships rebuilds the environment and nothing more.
 
-Details in [`docs/RESTORE.md`](docs/RESTORE.md) and
+Details in [`docs/RESTORE.md`](docs/RESTORE.md), [`docs/KEYBINDS.md`](docs/KEYBINDS.md) and
 [`docs/EXCLUDES.md`](docs/EXCLUDES.md).
 ```
 ┌──────────────────────────────────────────────────────────────────┐

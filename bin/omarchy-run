@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+# Omarchy's bin is kept off the global PATH so its 441 commands cannot shadow
+# anything. The exposed subset is symlinked to this dispatcher instead, which
+# puts that bin on PATH just for the child so sibling calls still resolve.
+
+export OMARCHY_PATH="${OMARCHY_PATH:-$HOME/.local/share/omarchy}"
+export PATH="${OMARCHY_PATH}/bin:${PATH}"
+
+cmd="$(basename "$0")"
+
+if [ "${cmd}" = "omarchy-run" ]; then
+	[ $# -ge 1 ] || {
+		echo "usage: omarchy-run <omarchy-command> [args...]"
+		echo "exposed:"
+		find "${HOME}/.local/bin" -lname '*omarchy-run' -printf '  %f\n' 2>/dev/null | sort
+		exit 1
+	}
+	cmd="$1"
+	shift
+fi
+
+target="${OMARCHY_PATH}/bin/${cmd}"
+[ -x "${target}" ] || { echo "omarchy-run: no such omarchy command: ${cmd}" >&2; exit 127; }
+
+exec "${target}" "$@"
