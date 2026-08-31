@@ -95,7 +95,7 @@ credentials, wallet stores, and every engagement token (HTB, boot.dev, Qobuz)
 are excluded by rule and verified by a secret scan before each commit. What
 ships rebuilds the environment and nothing more.
 
-Details in [`docs/RESTORE.md`](docs/RESTORE.md), [`docs/KEYBINDS.md`](docs/KEYBINDS.md) and
+Details in [`docs/RESTORE.md`](docs/RESTORE.md), [`docs/OPERATIONS.md`](docs/OPERATIONS.md), [`docs/KEYBINDS.md`](docs/KEYBINDS.md) and
 [`docs/EXCLUDES.md`](docs/EXCLUDES.md).
 ```
 ┌──────────────────────────────────────────────────────────────────┐

@@ -5,12 +5,13 @@ antigravity
 candy-icons-git
 claude-desktop-official-bin
 davinci-resolve
+electron37
 electron40-bin
 electron40-bin-debug
 google-chrome
 grimblast-git
-libsoup
 light
+litehtml0.9
 mongodb-tools-bin
 mongodb-tools-bin-debug
 mongosh-bin
@@ -27,6 +28,7 @@ pomo-git-debug
 protonup-qt
 python-gevent-eventemitter
 python-inputs
+python-pkg_resources
 python-steam
 runit-systemd
 runit-systemd-debug

@@ -88,6 +88,7 @@ catatonit
 cava
 cblas
 cdparanoia
+cfitsio
 chromaprint
 cifs-utils
 clang
@@ -142,9 +143,9 @@ ed
 editorconfig-core-c
 efibootmgr
 efivar
-electron37
 electron39
 electron41
+electron43
 elfutils
 ell
 enchant
@@ -261,6 +262,7 @@ gtk4
 gtk4-layer-shell
 gtkmm3
 gtksourceview3
+gtksourceview4
 guile
 gum
 gumbo-parser
@@ -270,6 +272,7 @@ gzip
 harfbuzz
 harfbuzz-icu
 hashcat
+hdf5
 hdparm
 hicolor-icon-theme
 hidapi
@@ -490,6 +493,7 @@ lib32-xz
 lib32-zlib
 lib32-zstd
 libadwaita
+libaec
 libaio
 libappindicator
 libarchive
@@ -527,6 +531,7 @@ libcanberra
 libcap
 libcap-ng
 libcbor
+libcgif
 libcloudproviders
 libcolord
 libcups
@@ -610,6 +615,7 @@ libltc
 libmakepkg-dropins
 libmalcontent
 libmanette
+libmatio
 libmaxminddb
 libmbim
 libmd
@@ -671,6 +677,7 @@ libqmi
 libqrtr-glib
 libquadmath
 libraqm
+libraw
 libraw1394
 librsvg
 librsync
@@ -684,6 +691,7 @@ libsixel
 libsm
 libsndfile
 libsodium
+libsoup
 libsoup3
 libsoxr
 libsrtp
@@ -702,6 +710,8 @@ libtiff
 libtirpc
 libtommath
 libtool
+libtraceevent
+libtracefs
 libtsan
 libubsan
 libunibreak
@@ -718,6 +728,7 @@ libva
 libva-utils
 libvdpau
 libverto
+libvips
 libvorbis
 libvpl
 libvpx
@@ -780,7 +791,7 @@ linux-firmware-radeon
 linux-firmware-realtek
 linux-firmware-whence
 linux-zen
-litehtml0.9
+litehtml
 lld
 llhttp
 llvm
@@ -901,6 +912,7 @@ pciutils
 pcre
 pcre2
 pcsclite
+pdfio
 perl
 perl-class-inspector
 perl-clone
@@ -1022,7 +1034,6 @@ python-pexpect
 python-pillow
 python-pip
 python-pipx
-python-pkg_resources
 python-platformdirs
 python-pluggy
 python-prompt_toolkit

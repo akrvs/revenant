@@ -21,7 +21,7 @@ mkdir -p "${REPO}/home"
 HOME_FILES=(
 	.zshrc .zshrc.pre-oh-my-zsh .shell.pre-oh-my-zsh
 	.bashrc .bash_profile .bash_logout
-	.p10k.zsh .gitconfig .condarc .npmrc .default-gems
+	.p10k.zsh .gitconfig .condarc .npmrc .default-gems .zshenv
 	.gtkrc-2.0 .notion-enhancer
 )
 for f in "${HOME_FILES[@]}"; do
