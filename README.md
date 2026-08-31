@@ -64,6 +64,13 @@ wallust pipeline; `Super + Shift + T` applies one of 22 curated Omarchy
 palettes, ported verbatim from upstream and pushed through the same wallust
 templates so every app reskins at once. See [`docs/THEMES.md`](docs/THEMES.md).
 
+## [ Hybrid Shell ]
+
+Waybar keeps the bar. Omarchy's Quickshell shell runs beside it with its own
+bar suppressed, lending only its panels and search menu — bluetooth, wifi,
+audio and display open under the button that summoned them, themed in step
+with everything else. See [`docs/HYBRID.md`](docs/HYBRID.md).
+
 ## [ Deploy ]
 
 ```

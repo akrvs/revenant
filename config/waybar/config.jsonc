@@ -56,7 +56,8 @@
         "tooltip-format": "Bluetooth: off",
         "tooltip-format-on": "Bluetooth: on",
         "tooltip-format-connected": "Connected: {device_alias}",
-        "on-click": "rfkill toggle bluetooth"
+        "on-click": "omarchy-panel bluetooth",
+        "on-click-right": "rfkill toggle bluetooth"
     },
 
     "network": {
@@ -65,7 +66,9 @@
         "format-disconnected": "󰌙",
         "format-icons": ["󰤯","󰤟","󰤢","󰤥","󰤨"],
         "tooltip-format-wifi": "{essid}  {signalStrength}%\n↑ {bandwidthUpBits}  ↓ {bandwidthDownBits}",
-        "interval": 5
+        "interval": 5,
+        "on-click": "omarchy-panel network",
+        "on-click-right": "pgrep -x rofi >/dev/null && pkill rofi || networkmanager_dmenu"
     },
 
     "pulseaudio": {
@@ -74,7 +77,8 @@
         "format-icons": {
             "default": ["󰕿","󰖀","󰕾"]
         },
-        "on-click": "~/.config/waybar/scripts/volume.sh",
+        "on-click": "omarchy-panel audio",
+        "on-click-right": "~/.config/waybar/scripts/volume.sh",
         "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
         "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
         "tooltip": false
@@ -85,7 +89,8 @@
         "exec": "ddcutil getvcp 10 | grep -oP 'current value =\\s*\\K\\d+'",
         "interval": "once",
         "signal": 8,
-        "on-click": "~/.config/waybar/scripts/brightness.sh",
+        "on-click": "omarchy-panel monitor",
+        "on-click-right": "~/.config/waybar/scripts/brightness.sh",
         "on-scroll-up": "current=$(ddcutil getvcp 10 | grep -oP 'current value =\\s*\\K\\d+'); ddcutil setvcp 10 $(($current + 5)) --noverify --sleep-multiplier .1; pkill -RTMIN+8 waybar",
         "on-scroll-down": "current=$(ddcutil getvcp 10 | grep -oP 'current value =\\s*\\K\\d+'); ddcutil setvcp 10 $(($current - 5)) --noverify --sleep-multiplier .1; pkill -RTMIN+8 waybar",
         "tooltip": false

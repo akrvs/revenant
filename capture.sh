@@ -45,10 +45,13 @@ mkdir -p "${REPO}/ai/etc" "${REPO}/ai/bin"
 [ -e "${HOME_DIR}/ai/bin/qwen" ] && cp -a "${HOME_DIR}/ai/bin/qwen" "${REPO}/ai/bin/"
 [ -e "${HOME_DIR}/.config/systemd/user/llama-swap.service" ] && cp -a "${HOME_DIR}/.config/systemd/user/llama-swap.service" "${REPO}/ai/"
 
-log "omarchy tooling"
+log "omarchy + rice tooling"
 mkdir -p "${REPO}/bin"
-for s in "${HOME_DIR}"/.local/bin/omarchy-*; do
+for s in "${HOME_DIR}"/.local/bin/omarchy-* "${HOME_DIR}"/.local/bin/rice-theme-*; do
 	[ -f "${s}" ] && cp -a "${s}" "${REPO}/bin/"
+done
+for s in "${HOME_DIR}"/.config/waybar/scripts/omarchy-*.sh; do
+	[ -f "${s}" ] && cp -a "${s}" "${REPO}/config/waybar/scripts/" 2>/dev/null || true
 done
 
 log "local-bin manifest"

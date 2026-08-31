@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+export OMARCHY_PATH="${OMARCHY_PATH:-$HOME/.local/share/omarchy}"
+export PATH="${OMARCHY_PATH}/bin:${PATH}"
+
+ANCHOR_HINT="/tmp/omarchy-anchor-x"
+
+[ $# -ge 1 ] || { echo "usage: omarchy-panel <plugin-id|menu [route]> [toggle|summon|hide]"; exit 1; }
+
+if [ "$1" = "menu" ]; then
+	shift
+	exec omarchy-menu toggle "${1:-root}"
+fi
+
+ID="$1"
+ACTION="${2:-toggle}"
+
+case "${ID}" in
+*.*) : ;;
+*) ID="omarchy.${ID}" ;;
+esac
+
+# The omarchy bar is hidden, so its widgets cannot anchor the popup under the
+# waybar button that was clicked. Hand the shell the pointer position instead.
+if [ "${ACTION}" != "hide" ] && command -v hyprctl >/dev/null 2>&1; then
+	X="$(hyprctl cursorpos 2>/dev/null | cut -d, -f1 | tr -d ' ')"
+	case "${X}" in
+	'' | *[!0-9]*) : ;;
+	*)
+		printf '%s' "${X}" >"${ANCHOR_HINT}.tmp" 2>/dev/null &&
+			mv -f "${ANCHOR_HINT}.tmp" "${ANCHOR_HINT}" 2>/dev/null
+		sleep 0.05
+		;;
+	esac
+fi
+
+exec omarchy-shell shell "${ACTION}" "${ID}" '{}'

@@ -52,12 +52,28 @@ if confirm "restore ~/.config?"; then
 	rsync -a "${REPO}/config/" "${HOME_DIR}/.config/"
 fi
 
-if [ -d "${REPO}/bin" ] && confirm "restore omarchy theme tooling?"; then
-	log "omarchy tooling"
+if [ -d "${REPO}/bin" ] && confirm "restore omarchy + theme tooling?"; then
+	log "tooling"
 	mkdir -p "${HOME_DIR}/.local/bin"
-	cp -a "${REPO}"/bin/omarchy-* "${HOME_DIR}/.local/bin/" 2>/dev/null || true
-	chmod +x "${HOME_DIR}"/.local/bin/omarchy-* 2>/dev/null || true
-	warn "run omarchy-theme-sync to re-fetch theme wallpapers"
+	cp -a "${REPO}"/bin/omarchy-* "${REPO}"/bin/rice-theme-* "${HOME_DIR}/.local/bin/" 2>/dev/null || true
+	chmod +x "${HOME_DIR}"/.local/bin/omarchy-* "${HOME_DIR}"/.local/bin/rice-theme-* 2>/dev/null || true
+	warn "run rice-theme-sync to re-fetch theme palettes and wallpapers"
+fi
+
+if confirm "reinstall the omarchy shell checkout (hybrid panels + menu)?"; then
+	log "omarchy shell"
+	sudo pacman -S --needed --noconfirm quickshell || warn "install quickshell manually"
+	rm -rf "${HOME_DIR}/.local/share/omarchy"
+	git clone --depth 1 --branch quattro https://github.com/basecamp/omarchy.git "${HOME_DIR}/.local/share/omarchy"
+	rm -rf "${HOME_DIR}/.local/share/omarchy/.git"
+	mkdir -p "${HOME_DIR}/.local/share/fonts"
+	cp -f "${HOME_DIR}/.local/share/omarchy/default/fonts/omarchy/omarchy.ttf" "${HOME_DIR}/.local/share/fonts/" 2>/dev/null || true
+	fc-cache -f >/dev/null 2>&1 || true
+	if [ -f "${REPO}/patches/omarchy-shell-hybrid.patch" ]; then
+		(cd "${HOME_DIR}/.local/share/omarchy" && patch -p1 <"${REPO}/patches/omarchy-shell-hybrid.patch") ||
+			warn "hybrid patch did not apply, see docs/HYBRID.md"
+	fi
+	warn "start it with: omarchy-shell-ctl start"
 fi
 
 if confirm "restore AI stack (llama-swap)?"; then

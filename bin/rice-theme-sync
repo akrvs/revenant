@@ -119,13 +119,15 @@ def main():
             warn(f"{name}: no colors.toml, skipped")
             continue
         try:
-            colors = tomllib.loads(fetch(toml_path).decode("utf-8"))
+            raw = fetch(toml_path)
+            colors = tomllib.loads(raw.decode("utf-8"))
         except Exception as e:
             warn(f"{name}: could not parse colors.toml ({e})")
             continue
 
         tdir = THEMES_DIR / name
         tdir.mkdir(parents=True, exist_ok=True)
+        (tdir / "colors.toml").write_bytes(raw)
 
         cs = CS_DIR / f"omarchy-{name}.json"
         cs.write_text(json.dumps(to_wallust(colors), indent=2))

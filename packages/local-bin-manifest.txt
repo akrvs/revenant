@@ -99,11 +99,9 @@ netview.py
 nmapAnswerMachine.py
 ntfs-read.py
 ntlmrelayx.py
-omarchy-theme-list
-omarchy-theme-menu
-omarchy-theme-next
-omarchy-theme-set
-omarchy-theme-sync
+omarchy-ipc
+omarchy-panel
+omarchy-shell-ctl
 owneredit.py
 pasteurize
 phd
@@ -132,6 +130,11 @@ readelf.py
 registry-read.py
 reg.py
 regsecrets.py
+rice-theme-list
+rice-theme-menu
+rice-theme-next
+rice-theme-set
+rice-theme-sync
 ROPgadget
 rpcdump.py
 rpcmap.py

@@ -1,3 +1,4 @@
 llama-swap.service
+swaync.service
 wireplumber.service
 xdg-user-dirs.service

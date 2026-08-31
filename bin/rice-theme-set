@@ -9,7 +9,7 @@ HYPR_SCRIPTS="${HOME}/.config/hypr/scripts"
 log() { printf '\033[32m::\033[0m %s\n' "$1"; }
 fail() { printf '\033[31mxx\033[0m %s\n' "$1" >&2; exit 1; }
 
-[ $# -ge 1 ] || fail "usage: omarchy-theme-set <theme>"
+[ $# -ge 1 ] || fail "usage: rice-theme-set <theme>"
 
 THEME="$1"
 TDIR="${THEMES_DIR}/${THEME}"
@@ -25,7 +25,7 @@ source "${TDIR}/theme.conf"
 log "applying ${THEME}"
 
 CS_FILE="${HOME}/.config/wallust/colorschemes/${COLORSCHEME}.json"
-[ -f "${CS_FILE}" ] || fail "missing colorscheme ${CS_FILE}, run omarchy-theme-sync"
+[ -f "${CS_FILE}" ] || fail "missing colorscheme ${CS_FILE}, run rice-theme-sync"
 
 wallust cs "${CS_FILE}" -s -q || fail "wallust failed for ${COLORSCHEME}"
 
@@ -81,8 +81,15 @@ if pgrep -x cava >/dev/null 2>&1; then
 	killall -SIGUSR1 cava 2>/dev/null || true
 fi
 
+if [ -f "${TDIR}/colors.toml" ] && command -v omarchy-ipc >/dev/null 2>&1; then
+	COLORS_B64="$(base64 -w 0 "${TDIR}/colors.toml")"
+	SHELL_B64=""
+	[ -f "${TDIR}/shell.toml" ] && SHELL_B64="$(base64 -w 0 "${TDIR}/shell.toml")"
+	omarchy-ipc shell applyTheme "${COLORS_B64}" "${SHELL_B64}" >/dev/null 2>&1 || true
+fi
+
 echo "${THEME}" >"${STATE}"
 
-notify-send -a "omarchy" "Theme applied" "${THEME} (${MODE})" -i preferences-desktop-theme 2>/dev/null || true
+notify-send -a "omarchy" -e -t 2000 "Theme applied" "${THEME} (${MODE})" 2>/dev/null || true
 
 log "done: ${THEME}"

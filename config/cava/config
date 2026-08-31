@@ -243,14 +243,14 @@ show_idle_bar_heads = 1
 # for wallust — gamified dark->bright arcade climb (monotonic, peaks glow brightest)
 gradient = 1
 gradient_count = 8
-gradient_color_1 = '#13141C'
-gradient_color_2 = '#F7768E'
-gradient_color_3 = '#E0AF68'
-gradient_color_4 = '#7DA6FF'
-gradient_color_5 = '#AD8EE6'
-gradient_color_6 = '#449DAB'
-gradient_color_7 = '#A9B1D6'
-gradient_color_8 = '#A9B1D6'
+gradient_color_1 = '#090809'
+gradient_color_2 = '#C38B7B'
+gradient_color_3 = '#6B5E73'
+gradient_color_4 = '#B59790'
+gradient_color_5 = '#C4D8E2'
+gradient_color_6 = '#A5A0B6'
+gradient_color_7 = '#FAFCFB'
+gradient_color_8 = '#FAFCFB'
 
 
 [smoothing]

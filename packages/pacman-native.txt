@@ -103,6 +103,7 @@ corectrl
 coreutils
 cpio
 cppdap
+cpptrace
 cpupower
 cracklib
 cronie
@@ -543,6 +544,7 @@ libdrm
 libdv
 libdvdnav
 libdvdread
+libdwarf
 libebur128
 libedit
 libei
@@ -1094,7 +1096,9 @@ qt6-svg
 qt6-tools
 qt6-translations
 qt6-virtualkeyboard
+qt6-wayland
 quazip-qt6
+quickshell
 radeontop
 raptor
 rav1e

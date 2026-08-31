@@ -1,0 +1,142 @@
+--- a/shell/Ui/KeyboardPanel.qml
++++ b/shell/Ui/KeyboardPanel.qml
+@@ -1,5 +1,6 @@
+ import QtQuick
+ import Quickshell
++import Quickshell.Io
+ import Quickshell.Wayland
+ import qs.Commons
+ 
+@@ -46,6 +47,23 @@
+   property int contentHeight: Style.space(200)
+   property var borderSpec: Border.surfaceSpec("popups", "border", Color.popups.border, Math.max(1, Style.space(2)))
+   property bool centerOnBar: false
++
++  // With the omarchy bar hidden, an external bar (waybar) owns the top strip.
++  // Its height is what panels must clear, and its buttons — not the hidden
++  // bar's widgets — are what they should line up under.
++  readonly property int externalBarOffset: (bar && bar.barHidden && barPos === "top")
++    ? Number(Quickshell.env("OMARCHY_EXTERNAL_BAR_OFFSET") || 0)
++    : 0
++
++  // Pointer x written by omarchy-panel immediately before it summons a panel.
++  FileView {
++    id: anchorHintFile
++    path: "/tmp/omarchy-anchor-x"
++    watchChanges: true
++    blockLoading: true
++    printErrors: false
++    onFileChanged: reload()
++  }
+   property bool open: false
+   property int gap: Style.gapsOut  // distance between bar edge and panel
+   property bool popoutSwitching: false
+@@ -197,6 +215,7 @@
+     if (centerOnBar && (barPos === "top" || barPos === "bottom")) {
+       x = screenW / 2 - contentWidth / 2
+       y = barPos === "bottom" ? screenH - barH - contentHeight - gap : barH + gap
++      if (barPos === "top" && externalBarOffset > 0) y = externalBarOffset + gap
+     } else if (centerOnBar) {
+       x = barPos === "left" ? barW + gap : screenW - barW - contentWidth - gap
+       y = screenH / 2 - contentHeight / 2
+@@ -212,6 +231,11 @@
+     } else { // "top" (default)
+       x = anchorScreenPos.x + anchorW / 2 - contentWidth / 2
+       y = barH + gap
++      if (externalBarOffset > 0) {
++        y = externalBarOffset + gap
++        var hint = Number(anchorHintFile.text())
++        if (isFinite(hint) && hint > 0) x = hint - contentWidth / 2
++      }
+     }
+     x = Math.max(margin, Math.min(x, screenW - contentWidth - margin))
+     y = Math.max(margin, Math.min(y, screenH - contentHeight - margin))
+--- a/shell/Ui/PopupCard.qml
++++ b/shell/Ui/PopupCard.qml
+@@ -1,6 +1,7 @@
+ import QtQuick
+ import Quickshell
+ import Quickshell.Hyprland
++import Quickshell.Io
+ import qs.Commons
+ 
+ PopupWindow {
+@@ -10,6 +11,13 @@
+   required property QtObject bar
+   property var owner: null
+   property int margin: Style.gapsOut
++
++  // With the omarchy bar hidden, another bar (waybar) owns the top strip and
++  // the anchor window sits off-screen, so popups would land under it. Shift
++  // them clear by the external bar's occupied height.
++  readonly property int externalBarOffset: (root.bar && root.bar.barHidden && root.bar.position === "top")
++    ? Number(Quickshell.env("OMARCHY_EXTERNAL_BAR_OFFSET") || 0)
++    : 0
+   property int padding: Style.spacing.popupPadding
+   property int contentWidth: Style.space(280)
+   property int contentHeight: Style.space(200)
+@@ -101,7 +109,7 @@
+       var popupWidth = root.implicitWidth
+       var popupHeight = root.implicitHeight
+       var localX = target.width / 2 - popupWidth / 2
+-      var localY = target.height + root.margin
++      var localY = target.height + root.margin + root.externalBarOffset
+ 
+       if (root.bar.position === "bottom") {
+         localY = -popupHeight - root.margin
+@@ -121,7 +129,7 @@
+         var cy = 0;
+         if (root.bar.position === "top" || root.bar.position === "bottom") {
+           cx = window.width / 2 - popupWidth / 2
+-          cy = root.bar.position === "bottom" ? -popupHeight - root.margin : window.height + root.margin
++          cy = root.bar.position === "bottom" ? -popupHeight - root.margin : window.height + root.margin + root.externalBarOffset
+           cx = Math.max(root.margin, Math.min(cx, window.width - popupWidth - root.margin))
+         } else {
+           cx = root.bar.position === "left" ? window.width + root.margin : -popupWidth - root.margin
+@@ -136,6 +144,13 @@
+ 
+       var point = window.contentItem.mapFromItem(target, localX, localY)
+ 
++      // The hidden omarchy bar's widgets sit nowhere near the external bar's
++      // buttons, so centre the popup on the pointer that opened it instead.
++      if (root.externalBarOffset > 0 && (root.bar.position === "top" || root.bar.position === "bottom")) {
++        var hint = Number(anchorHintFile.text())
++        if (isFinite(hint) && hint > 0) point.x = hint - popupWidth / 2
++      }
++
+       if (root.bar.position === "top" || root.bar.position === "bottom") {
+         point.x = Math.max(root.margin, Math.min(point.x, window.width - popupWidth - root.margin))
+       } else {
+@@ -147,6 +162,16 @@
+     }
+   }
+ 
++  // Pointer x written by omarchy-panel just before it summons a popup.
++  FileView {
++    id: anchorHintFile
++    path: "/tmp/omarchy-anchor-x"
++    watchChanges: true
++    blockLoading: true
++    printErrors: false
++    onFileChanged: reload()
++  }
++
+   BorderSurface {
+     id: card
+     anchors.fill: parent
+--- a/shell/plugins/notifications/Service.qml
++++ b/shell/plugins/notifications/Service.qml
+@@ -48,7 +48,12 @@
+   readonly property string barPosition: shell && shell.barConfig ? String(shell.barConfig.position || "top") : "top"
+   readonly property bool barVertical: barPosition === "left" || barPosition === "right"
+   readonly property int defaultBarSize: barVertical ? Style.bar.sizeVertical : Style.bar.sizeHorizontal
+-  readonly property int liveBarSize: shell && shell.bar && !shell.bar.barHidden ? Math.max(0, shell.bar.barSize) : defaultBarSize
++  // With the omarchy bar hidden, another bar (waybar) owns the top strip, so
++  // toasts must clear that instead of the omarchy bar's own height.
++  readonly property int externalBarOffset: Number(Quickshell.env("OMARCHY_EXTERNAL_BAR_OFFSET") || 0)
++  readonly property int liveBarSize: shell && shell.bar && !shell.bar.barHidden
++    ? Math.max(0, shell.bar.barSize)
++    : (externalBarOffset > 0 ? externalBarOffset : defaultBarSize)
+   readonly property int barClearance: liveBarSize + Style.gapsOut
+ 
+   // Live Notification objects by originalId, kept OUT of the ListModels: a

@@ -16,12 +16,12 @@ mono_option = left
 [color]
 gradient = 1
 gradient_count = 6
-gradient_color_1 = '#ffb4a8'
-gradient_color_2 = '#e7bdb6'
-gradient_color_3 = '#dec48c'
-gradient_color_4 = '#73342a'
-gradient_color_5 = '#5d3f3a'
-gradient_color_6 = '#564419'
+gradient_color_1 = '#9accfa'
+gradient_color_2 = '#b9c8da'
+gradient_color_3 = '#d2bfe7'
+gradient_color_4 = '#0a4a72'
+gradient_color_5 = '#394857'
+gradient_color_6 = '#4f4061'
 
 [smoothing]
 noise_reduction = 88

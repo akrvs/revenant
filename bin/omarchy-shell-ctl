@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+export OMARCHY_PATH="${OMARCHY_PATH:-$HOME/.local/share/omarchy}"
+export PATH="${OMARCHY_PATH}/bin:${PATH}"
+
+SHELL_QML="${OMARCHY_PATH}/shell/shell.qml"
+LOG="/tmp/omarchy-shell.log"
+TOGGLES="${HOME}/.local/state/omarchy/toggles"
+PATTERN="quickshell.*shell\.qml"
+
+# Waybar owns the top strip while the omarchy bar is hidden. Panels and toasts
+# anchor to the hidden bar, so they need this to clear waybar's real footprint.
+waybar_bottom() {
+	python3 - <<'PY' 2>/dev/null || echo 38
+import json, os, re
+p = os.path.expanduser("~/.config/waybar/config")
+try:
+    s = open(p).read()
+    s = re.sub(r'/\*.*?\*/', '', s, flags=re.S)
+    s = re.sub(r'^\s*//.*$', '', s, flags=re.M)
+    s = re.sub(r',(\s*[}\]])', r'\1', s)
+    d = json.loads(s)
+    print(int(d.get("height", 32)) + int(d.get("margin-top", 0)))
+except Exception:
+    print(38)
+PY
+}
+
+export OMARCHY_EXTERNAL_BAR_OFFSET="${OMARCHY_EXTERNAL_BAR_OFFSET:-$(waybar_bottom)}"
+
+log() { printf '\033[32m::\033[0m %s\n' "$1"; }
+
+running() { pgrep -f "${PATTERN}" >/dev/null 2>&1; }
+
+case "${1:-start}" in
+start)
+	if running; then log "already running"; exit 0; fi
+	mkdir -p "${TOGGLES}"
+	touch "${TOGGLES}/bar-off"
+	(setsid quickshell -p "${SHELL_QML}" >"${LOG}" 2>&1 &)
+	sleep 3
+	running && log "omarchy shell running (bar hidden, waybar owns the bar)" || { log "failed, see ${LOG}"; tail -20 "${LOG}"; }
+	;;
+stop)
+	pkill -f "${PATTERN}" 2>/dev/null
+	sleep 0.5
+	log "omarchy shell stopped"
+	;;
+restart)
+	"$0" stop >/dev/null 2>&1
+	sleep 1
+	"$0" start
+	;;
+status)
+	running && log "running" || log "stopped"
+	;;
+log)
+	tail -40 "${LOG}"
+	;;
+notifications-omarchy)
+	systemctl --user disable --now swaync.service >/dev/null 2>&1
+	pkill -x swaync 2>/dev/null
+	python3 - <<'PY'
+import json, os
+p = os.path.expanduser("~/.config/omarchy/shell.json")
+d = json.load(open(p))
+d["disabledPlugins"] = [x for x in d.get("disabledPlugins", []) if x != "omarchy.notifications"]
+json.dump(d, open(p, "w"), indent=2)
+PY
+	"$0" restart >/dev/null 2>&1
+	log "notifications now handled by omarchy (swaync stopped, still installed)"
+	;;
+notifications-swaync)
+	python3 - <<'PY'
+import json, os
+p = os.path.expanduser("~/.config/omarchy/shell.json")
+d = json.load(open(p))
+dp = d.get("disabledPlugins", [])
+if "omarchy.notifications" not in dp:
+    dp.append("omarchy.notifications")
+d["disabledPlugins"] = dp
+json.dump(d, open(p, "w"), indent=2)
+PY
+	"$0" restart >/dev/null 2>&1
+	systemctl --user enable --now swaync.service >/dev/null 2>&1
+	log "notifications reverted to swaync"
+	;;
+*)
+	echo "usage: omarchy-shell-ctl [start|stop|restart|status|log|notifications-omarchy|notifications-swaync]"
+	exit 1
+	;;
+esac

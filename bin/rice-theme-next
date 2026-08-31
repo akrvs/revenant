@@ -5,7 +5,7 @@ THEMES_DIR="${HOME}/.config/omarchy/themes"
 STATE="${HOME}/.config/omarchy/current-theme"
 
 mapfile -t THEMES < <(find "${THEMES_DIR}" -mindepth 2 -maxdepth 2 -name theme.conf -printf '%h\n' | xargs -r -n1 basename | sort)
-[ ${#THEMES[@]} -gt 0 ] || { echo "no themes synced, run omarchy-theme-sync" >&2; exit 1; }
+[ ${#THEMES[@]} -gt 0 ] || { echo "no themes synced, run rice-theme-sync" >&2; exit 1; }
 
 CURRENT=""
 [ -f "${STATE}" ] && CURRENT="$(cat "${STATE}")"
@@ -18,4 +18,4 @@ for i in "${!THEMES[@]}"; do
 	fi
 done
 
-exec omarchy-theme-set "${NEXT}"
+exec rice-theme-set "${NEXT}"

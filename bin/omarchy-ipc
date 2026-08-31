@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+export OMARCHY_PATH="${OMARCHY_PATH:-$HOME/.local/share/omarchy}"
+export PATH="${OMARCHY_PATH}/bin:${PATH}"
+
+exec omarchy-shell "$@"

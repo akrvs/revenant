@@ -11,21 +11,31 @@ Omarchy's curated theming grafted onto the existing JaKooLit rice, without repla
 
 Every themed app already reads colors from a wallust template target (hyprland, waybar, rofi, swaync, dunst, kitty, cava, zathura, rmpc, neovim). Rather than duplicate per-app theming, the Omarchy palettes are converted into wallust colorschemes and applied through that same pipeline. One command reskins everything.
 
-Palettes are ported verbatim from `basecamp/omarchy` (branch `quattro`), where each theme ships a single semantic `colors.toml`. `omarchy-theme-sync` fetches those, maps them onto wallust's 16-color scheme, and writes:
+Palettes are ported verbatim from `basecamp/omarchy` (branch `quattro`), where each theme ships a single semantic `colors.toml`. `rice-theme-sync` fetches those, maps them onto wallust's 16-color scheme, and writes:
 
 - `~/.config/wallust/colorschemes/omarchy-<theme>.json`
 - `~/.config/omarchy/themes/<theme>/theme.conf`
+- `~/.config/omarchy/themes/<theme>/colors.toml`
 - `~/.config/omarchy/themes/<theme>/backgrounds/`
+
+The raw `colors.toml` is kept because the Omarchy shell takes its palette the
+same way upstream does: `rice-theme-set` base64-encodes it and calls the
+shell's `applyTheme` IPC, so the panels, menu and toasts recolour with the bar.
+See [`HYBRID.md`](HYBRID.md).
+
+The tooling is named `rice-theme-*` rather than `omarchy-theme-*` because
+Omarchy ships binaries of the latter name; see the collision note in
+[`HYBRID.md`](HYBRID.md).
 
 ## Commands
 
 | Command | Purpose |
 | --- | --- |
-| `omarchy-theme-sync` | Fetch and convert all themes from upstream. `--no-backgrounds` to skip wallpapers. |
-| `omarchy-theme-set <name>` | Apply a theme. |
-| `omarchy-theme-menu` | Rofi picker. |
-| `omarchy-theme-next` | Cycle to the next theme. |
-| `omarchy-theme-list` | List themes, current marked `*`. |
+| `rice-theme-sync` | Fetch and convert all themes from upstream. `--no-backgrounds` to skip wallpapers. |
+| `rice-theme-set <name>` | Apply a theme. |
+| `rice-theme-menu` | Rofi picker. |
+| `rice-theme-next` | Cycle to the next theme. |
+| `rice-theme-list` | List themes, current marked `*`. |
 
 ## Keybinds
 
@@ -46,4 +56,4 @@ Applying a fixed theme writes its name to `~/.config/omarchy/current-theme`. Run
 
 ## Not captured in this repo
 
-`~/.config/omarchy/themes/*/backgrounds/` is excluded — roughly 50 MB of upstream wallpapers, re-fetched with `omarchy-theme-sync`.
+`~/.config/omarchy/themes/*/backgrounds/` is excluded — roughly 50 MB of upstream wallpapers, re-fetched with `rice-theme-sync`.
