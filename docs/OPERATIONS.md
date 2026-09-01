@@ -116,3 +116,16 @@ Root is BTRFS with `timeshift-autosnap`, so a snapshot is taken before every
 pacman upgrade. `sudo timeshift --list` to see them. `/var/cache/pacman/pkg`
 holds the previous versions for a targeted downgrade when a full rollback is
 too blunt.
+
+## graphical-session.target never activates
+
+This session never reaches `graphical-session.target`, so a user unit that is
+only `WantedBy=graphical-session.target` will sit `enabled` but `inactive`
+forever after a reboot. swaync survives that because it is D-Bus activated;
+`omarchy-crash-watch` did not, and came back dead after the first reboot even
+though `systemctl --user is-enabled` said `enabled`.
+
+It is started explicitly from `Startup_Apps.conf`, placed after the
+`import-environment` line so its `ConditionEnvironment=WAYLAND_DISPLAY` can
+pass. Any future user unit needs the same treatment — check with
+`systemctl --user is-active <unit>` after a reboot, not just `is-enabled`.
