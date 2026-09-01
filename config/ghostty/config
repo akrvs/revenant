@@ -3,3 +3,7 @@ background-opacity = 0.85
 background-blur = true
 window-padding-x = 10
 window-padding-y = 10
+
+# Selecting text copies it to the system clipboard as well as the
+# selection clipboard. Default is true, which is selection-only.
+copy-on-select = clipboard

@@ -197,4 +197,5 @@ wmiquery.py
 wsdump
 wsuks
 xdg-terminal-exec
+xdg-terminal-exec.bak
 zed
