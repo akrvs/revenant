@@ -129,3 +129,18 @@ It is started explicitly from `Startup_Apps.conf`, placed after the
 `import-environment` line so its `ConditionEnvironment=WAYLAND_DISPLAY` can
 pass. Any future user unit needs the same treatment — check with
 `systemctl --user is-active <unit>` after a reboot, not just `is-enabled`.
+
+## ghostty config edits appear to do nothing
+
+The shipped desktop entry and D-Bus service both launch ghostty with
+`--gtk-single-instance=true`, which overrides `gtk-single-instance = false` in
+the config. One long-lived daemon (`app-com.mitchellh.ghostty.service`) then
+serves every window opened from the app launcher, and it holds whatever config
+it read when it started. Edit the config and nothing changes, because the
+daemon never re-read it.
+
+`Ctrl + Shift + ,` runs `reload_config` and applies the new config to the
+running instance, existing windows included. A reboot also clears it, since the
+daemon starts fresh. Terminals started from a command line do not join the
+daemon and always get the current config, which is why a change can look like
+it works in one window and not another.
